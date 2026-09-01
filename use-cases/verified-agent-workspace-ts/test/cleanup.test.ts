@@ -20,7 +20,7 @@ test("starts preview detached without leaving a pending command handle", async (
     kill: async () => { events.push("sandbox-kill") },
   }
   const provider = new SolariWorkspaceProvider("test-key")
-  ;(provider as unknown as { sandbox: typeof sandbox }).sandbox = sandbox
+  Object.defineProperty(provider, "sandbox", { value: sandbox, writable: true })
   await provider.start("npm run dev -- --host 0.0.0.0")
   await provider.destroy()
   assert.deepEqual(events, [
