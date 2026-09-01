@@ -1,4 +1,3 @@
-import { resolve } from "node:path"
 import { loadConfig } from "./src/config.js"
 import { capabilityFingerprint, failEvidence, publicPreviewUrl, writeEvidence } from "./src/evidence.js"
 import { verifyPreview } from "./src/solari-browser.js"
@@ -10,8 +9,8 @@ const apiKey = process.env.SOLARI_API_KEY
 if (!apiKey) throw new Error("Missing SOLARI_API_KEY")
 
 const config = loadConfig()
-const evidencePath = resolve("artifacts/evidence.json")
-const screenshotPath = resolve("artifacts/preview.png")
+const evidencePath = "artifacts/evidence.json"
+const screenshotPath = "artifacts/preview.png"
 const workspace = new SolariWorkspaceProvider(apiKey)
 
 let evidence: VerificationEvidence = {
