@@ -37,7 +37,7 @@ export class SolariWorkspaceProvider {
       timeoutMs: 8 * 60_000,
     })
     return {
-      command,
+      command: scrubOutput(command),
       exitCode: result.exitCode,
       stdout: scrubOutput(result.stdout),
       stderr: scrubOutput(result.stderr),
@@ -45,10 +45,20 @@ export class SolariWorkspaceProvider {
   }
 
   async start(command: string): Promise<void> {
-    await this.requireSandbox().commands.start("sh", {
-      args: ["-lc", command],
-      cwd: "/workspace/repo",
+    const sandbox = this.requireSandbox()
+    await sandbox.files.write(
+      "/tmp/verified-agent-preview.sh",
+      `#!/bin/sh\nset -eu\ncd /workspace/repo\n${command}\n`,
+    )
+    const result = await sandbox.commands.run("sh", {
+      args: [
+        "-lc",
+        "nohup sh /tmp/verified-agent-preview.sh >/tmp/verified-agent-preview.log 2>&1 </dev/null &",
+      ],
     })
+    if (result.exitCode !== 0) {
+      throw new Error(`Failed to start preview: ${scrubOutput(result.stderr)}`)
+    }
   }
 
   async gitStatus() {

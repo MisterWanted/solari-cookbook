@@ -1,6 +1,6 @@
 import { Solari } from "@solarisdk/browser"
 import { mkdir } from "node:fs/promises"
-import { dirname } from "node:path"
+import { dirname, relative } from "node:path"
 import { sha256File } from "./evidence.js"
 
 export interface BrowserEvidence {
@@ -31,7 +31,7 @@ export async function verifyPreview(
     return {
       expectedText,
       title: await page.title(),
-      screenshotPath,
+      screenshotPath: relative(process.cwd(), screenshotPath),
       screenshotSha256: await sha256File(screenshotPath),
     }
   } finally {

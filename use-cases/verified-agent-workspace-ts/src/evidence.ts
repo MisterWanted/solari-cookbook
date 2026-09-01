@@ -5,6 +5,17 @@ import type { VerificationEvidence } from "./types.js"
 
 const MAX_LOG_CHARS = 16_000
 
+export function capabilityFingerprint(value: string): string {
+  return createHash("sha256").update(value).digest("hex").slice(0, 16)
+}
+
+export function publicPreviewUrl(value: string): string {
+  const url = new URL(value)
+  url.search = ""
+  url.hash = ""
+  return url.toString()
+}
+
 export function scrubOutput(value: string): string {
   const redacted = value
     .replace(/\bslr_live_[A-Za-z0-9_-]+\b/g, "[REDACTED_SOLARI_KEY]")
@@ -37,6 +48,6 @@ export function failEvidence(
     ...evidence,
     finishedAt: new Date().toISOString(),
     status: "FAILED",
-    error: error instanceof Error ? error.message : String(error),
+    error: scrubOutput(error instanceof Error ? error.message : String(error)),
   }
 }

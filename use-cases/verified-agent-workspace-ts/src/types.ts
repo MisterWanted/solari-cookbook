@@ -20,7 +20,7 @@ export interface VerificationEvidence {
   version: 1
   startedAt: string
   finishedAt?: string
-  sandboxId?: string
+  sandboxFingerprint?: string
   repository: string
   ref?: string
   headSha?: string

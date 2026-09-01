@@ -1,6 +1,6 @@
 import { resolve } from "node:path"
 import { loadConfig } from "./src/config.js"
-import { failEvidence, writeEvidence } from "./src/evidence.js"
+import { capabilityFingerprint, failEvidence, publicPreviewUrl, writeEvidence } from "./src/evidence.js"
 import { verifyPreview } from "./src/solari-browser.js"
 import { SolariWorkspaceProvider } from "./src/solari-workspace.js"
 import type { VerificationEvidence } from "./src/types.js"
@@ -24,7 +24,8 @@ let evidence: VerificationEvidence = {
 }
 
 try {
-  evidence.sandboxId = await workspace.create()
+  const sandboxCapability = await workspace.create()
+  evidence.sandboxFingerprint = capabilityFingerprint(sandboxCapability)
   await workspace.clone(config.repoUrl, config.ref)
   evidence.headSha = await workspace.headSha()
 
@@ -41,11 +42,12 @@ try {
   evidence.gitStatus = await workspace.gitStatus()
 
   await workspace.start(config.startCommand)
-  evidence.previewUrl = await workspace.previewUrl(config.port)
-  await waitForHttp(evidence.previewUrl)
+  const previewCapabilityUrl = await workspace.previewUrl(config.port)
+  evidence.previewUrl = publicPreviewUrl(previewCapabilityUrl)
+  await waitForHttp(previewCapabilityUrl)
   evidence.browser = await verifyPreview(
     apiKey,
-    evidence.previewUrl,
+    previewCapabilityUrl,
     config.expectedText,
     screenshotPath,
   )
@@ -55,7 +57,12 @@ try {
     status: "PASSED",
   }
   await writeEvidence(evidencePath, evidence)
-  console.log(JSON.stringify(evidence, null, 2))
+  console.log(JSON.stringify({
+    status: evidence.status,
+    headSha: evidence.headSha,
+    previewUrl: evidence.previewUrl,
+    screenshotSha256: evidence.browser?.screenshotSha256,
+  }, null, 2))
 } catch (error) {
   evidence = failEvidence(evidence, error)
   await writeEvidence(evidencePath, evidence)
