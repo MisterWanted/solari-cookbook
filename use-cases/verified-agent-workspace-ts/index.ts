@@ -1,5 +1,5 @@
-import { loadConfig } from "./src/config.js"
-import { capabilityFingerprint, failEvidence, publicPreviewUrl, writeEvidence } from "./src/evidence.js"
+import { forwardedEnvironment, loadConfig } from "./src/config.js"
+import { capabilityFingerprint, failEvidence, publicPreviewUrl, sha256Text, writeEvidence } from "./src/evidence.js"
 import { verifyPreview } from "./src/solari-browser.js"
 import { SolariWorkspaceProvider } from "./src/solari-workspace.js"
 import type { EvidenceProgress, PassedEvidence } from "./src/types.js"
@@ -25,6 +25,7 @@ try {
   const sandboxFingerprint = capabilityFingerprint(await workspace.create())
   progress.sandboxFingerprint = sandboxFingerprint
   await workspace.clone(config.repoUrl, config.ref)
+  await workspace.setEnvironment(forwardedEnvironment(config.forwardEnvNames))
 
   const headSha = await workspace.headSha()
   progress.headSha = headSha
@@ -40,6 +41,13 @@ try {
 
   const gitStatus = await workspace.gitStatus()
   progress.gitStatus = gitStatus
+  const diff = await workspace.gitDiff()
+  if (diff) {
+    progress.mutation = {
+      changedFiles: [...new Set([...gitStatus.staged, ...gitStatus.modified, ...gitStatus.untracked])].sort(),
+      diffSha256: sha256Text(diff),
+    }
+  }
   await workspace.start(config.startCommand)
 
   const previewCapabilityUrl = await workspace.previewUrl(config.port)

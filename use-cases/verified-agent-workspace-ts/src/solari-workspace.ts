@@ -29,6 +29,11 @@ export class SolariWorkspaceProvider {
     if (ref) await sandbox.git.checkout(ref, { cwd: "/workspace/repo" })
   }
 
+  async setEnvironment(vars: Record<string, string>): Promise<void> {
+    if (Object.keys(vars).length === 0) return
+    await this.requireSandbox().env(vars)
+  }
+
   async exec(command: string): Promise<CommandEvidence> {
     const sandbox = this.requireSandbox()
     const result = await sandbox.commands.run("sh", {
@@ -59,6 +64,16 @@ export class SolariWorkspaceProvider {
     if (result.exitCode !== 0) {
       throw new Error(`Failed to start preview: ${scrubOutput(result.stderr)}`)
     }
+  }
+
+  async gitDiff(): Promise<string> {
+    const result = await this.requireSandbox().commands.run("git", {
+      args: ["diff", "--no-ext-diff", "--no-color", "--"],
+      cwd: "/workspace/repo",
+      timeoutMs: 60_000,
+    })
+    if (result.exitCode !== 0) throw new Error(`git diff failed: ${scrubOutput(result.stderr)}`)
+    return result.stdout
   }
 
   async gitStatus() {

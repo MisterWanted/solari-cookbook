@@ -5,8 +5,12 @@ import type { EvidenceProgress, FailedEvidence, VerificationEvidence } from "./t
 
 const MAX_LOG_CHARS = 16_000
 
+export function sha256Text(value: string): string {
+  return createHash("sha256").update(value).digest("hex")
+}
+
 export function capabilityFingerprint(value: string): string {
-  return createHash("sha256").update(value).digest("hex").slice(0, 16)
+  return sha256Text(value).slice(0, 16)
 }
 
 export function publicPreviewUrl(value: string): string {

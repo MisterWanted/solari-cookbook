@@ -12,6 +12,8 @@ repo/ref -> sandbox -> install -> optional agent -> test -> preview -> browser -
 
 Evidence includes the exact git SHA, command exit codes and output, a token-free
 preview origin, browser title, a screenshot, and the screenshot SHA-256 digest.
+When the worktree changes, evidence also records changed paths and a SHA-256 of
+the git diff without persisting the raw patch.
 
 ## Why this exists
 
@@ -36,6 +38,9 @@ npm start
 The target repository must expose a web server on `PORT`. Override the install,
 test, and start commands for pnpm, Python, Bun, or another stack. `AGENT_CMD` is
 optional: point it at Pi, Codex, OpenCode, or any other CLI present in the VM.
+Use `FORWARD_ENV` for an explicit comma-separated allowlist of host environment
+variables the agent needs; values are injected into the sandbox and are never
+written to evidence.
 
 ## Output
 

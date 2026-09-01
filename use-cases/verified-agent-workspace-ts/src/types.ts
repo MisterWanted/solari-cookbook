@@ -7,6 +7,7 @@ export interface RunConfig {
   startCommand: string
   port: number
   expectedText: string
+  forwardEnvNames: string[]
 }
 
 export interface CommandEvidence {
@@ -27,6 +28,11 @@ export interface GitStatusEvidence {
   clean: boolean
 }
 
+export interface MutationEvidence {
+  changedFiles: string[]
+  diffSha256: string
+}
+
 export interface BrowserEvidence {
   expectedText: string
   title: string
@@ -45,6 +51,7 @@ export interface EvidenceProgress {
   previewUrl?: string
   commands: CommandEvidence[]
   browser?: BrowserEvidence
+  mutation?: MutationEvidence
 }
 
 export interface PassedEvidence
