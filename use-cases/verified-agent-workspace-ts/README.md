@@ -59,6 +59,12 @@ Two committed jobs exercise the same state machine with different verifier kinds
 
 The Buddy job bootstraps checksum-pinned Node 24.15.0 and uses `npm ci`. It also commits the exact public issue context used for the run at `jobs/buddy-harmony-482.issue.json` and binds those canonical bytes with SHA-256 `1c85d0a268effc22c0f2603015c67bffa53067ca1f967552e2af9e6fb830191e`. Its browser policy seeds `i18nextLng=en-US` before navigation so independent baseline/final sessions cannot drift languages and invalidate preserved-name comparisons.
 
+### Upstream follow-through
+
+The immutable Solari proof remains anchored to `9a6fea34...`, but the same issue was rechecked against Buddy Harmony's then-current `main` (`882920c90af52d4c90f2c85484bb5a70b7f2d5e7`). None of the eight proof-scope files had drifted. A clean current-main patch was independently verified with typecheck, zero-warning lint, 41/41 tests, production build, and a browser audit showing 6 buttons preserved while unnamed buttons went from 4 to 0. That exact patch is published as [Buddy Harmony PR #599](https://github.com/Marthijs-Berfelo/buddy-harmony/pull/599) at head `99da9ca6ea300a99b5bb13f5a2f56500ea874a2d`.
+
+The upstream repository's `pull_request_target` CI currently refuses to check out fork code before commitlint/tests run; the PR comment records that as an upstream workflow-security limitation rather than weakening checkout protections.
+
 ## Run a live job
 
 ```bash
