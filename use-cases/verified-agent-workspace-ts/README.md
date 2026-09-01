@@ -4,6 +4,12 @@ Run an AI coding agent inside a fresh Solari sandbox, judge the result from an i
 
 The runtime treats issue text and agent output as hypotheses. Only runtime observations and explicit gates can produce `PASSED`.
 
+## Why Solari
+
+Solari provides two separate trust domains for one coding task: the sandbox is disposable execution for untrusted agent mutations, while a fresh Solari Browser independently observes the running result through the preview capability. The agent cannot mark its own work correct. Run-scoped sandbox metadata makes cleanup attributable even under concurrent work or a lost create response, and the final proof can be re-verified offline without either live credential.
+
+That turns the useful unit from "AI produced a patch" into "AI produced a bounded change that a separate runtime observer proved and that can be audited later."
+
 ```text
 immutable repo SHA
       |
@@ -58,6 +64,13 @@ Two committed jobs exercise the same state machine with different verifier kinds
 | `jobs/fixture-ai.json` | `MisterWanted/solari-cookbook@2efa5a79...` | placeholder absent after repair and `AI repaired this UI in Solari` present | 1 HTML file |
 
 The Buddy job bootstraps checksum-pinned Node 24.15.0 and uses `npm ci`. It also commits the exact public issue context used for the run at `jobs/buddy-harmony-482.issue.json` and binds those canonical bytes with SHA-256 `1c85d0a268effc22c0f2603015c67bffa53067ca1f967552e2af9e6fb830191e`. Its browser policy seeds `i18nextLng=en-US` before navigation so independent baseline/final sessions cannot drift languages and invalidate preserved-name comparisons.
+
+The semantic browser delta is intentionally more useful than the identical before/after pixels:
+
+```text
+BEFORE  ["", "", "", "", "Key", "Scale"]
+AFTER   ["Menu", "Settings", "Print scale", "Select language", "Key", "Scale"]
+```
 
 ### Upstream follow-through
 
