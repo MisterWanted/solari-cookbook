@@ -31,4 +31,4 @@ if (typeof content !== "string" || !content.includes("<html") || !content.includ
   throw new Error("Agent returned invalid HTML")
 }
 await writeFile(target, `${content.trim()}\n`, "utf8")
-console.log("AI agent edited fixture-ai/index.html")
+console.log(`AI agent edited fixture-ai/index.html with ${model}`)
