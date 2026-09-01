@@ -1,7 +1,7 @@
 {
   "version": 2,
   "engine": "verified-agent-runtime",
-  "startedAt": "2026-09-01T16:23:19.309Z",
+  "startedAt": "2026-09-01T17:41:57.741Z",
   "job": "fixture-ai-text-repair",
   "source": {
     "repository": "https://github.com/MisterWanted/solari-cookbook.git",
@@ -83,100 +83,100 @@
     {
       "phase": "SOURCE",
       "state": "STARTED",
-      "at": "2026-09-01T16:23:19.310Z",
+      "at": "2026-09-01T17:41:57.742Z",
       "detail": "https://github.com/MisterWanted/solari-cookbook.git@2efa5a792ce3"
     },
     {
       "phase": "SOURCE",
       "state": "PASSED",
-      "at": "2026-09-01T16:23:21.477Z",
+      "at": "2026-09-01T17:41:59.903Z",
       "detail": "2efa5a792ce34e7ee3ec28656b6dff637c923a40"
     },
     {
       "phase": "BASELINE",
       "state": "STARTED",
-      "at": "2026-09-01T16:23:21.477Z"
+      "at": "2026-09-01T17:41:59.903Z"
     },
     {
       "phase": "BASELINE",
       "state": "PASSED",
-      "at": "2026-09-01T16:23:33.152Z",
+      "at": "2026-09-01T17:42:04.499Z",
       "detail": "2/2 text checks passed"
     },
     {
       "phase": "MUTATE",
       "state": "STARTED",
-      "at": "2026-09-01T16:23:33.440Z",
+      "at": "2026-09-01T17:42:04.802Z",
       "detail": "attempt 1"
     },
     {
       "phase": "MUTATE",
       "state": "FAILED",
-      "at": "2026-09-01T16:23:35.582Z",
+      "at": "2026-09-01T17:42:07.064Z",
       "detail": "attempt 1: agent transport/protocol failure"
     },
     {
       "phase": "MUTATE",
       "state": "STARTED",
-      "at": "2026-09-01T16:23:35.582Z",
+      "at": "2026-09-01T17:42:07.064Z",
       "detail": "attempt 2"
     },
     {
       "phase": "MUTATE",
       "state": "PASSED",
-      "at": "2026-09-01T16:23:38.358Z",
+      "at": "2026-09-01T17:42:09.065Z",
       "detail": "attempt 2: 1 files"
     },
     {
       "phase": "STATIC_VERIFY",
       "state": "STARTED",
-      "at": "2026-09-01T16:23:38.358Z",
+      "at": "2026-09-01T17:42:09.065Z",
       "detail": "attempt 2"
     },
     {
       "phase": "STATIC_VERIFY",
       "state": "PASSED",
-      "at": "2026-09-01T16:23:38.885Z",
+      "at": "2026-09-01T17:42:09.593Z",
       "detail": "attempt 2: 1 gates"
     },
     {
       "phase": "RUNTIME_VERIFY",
       "state": "STARTED",
-      "at": "2026-09-01T16:23:38.885Z",
+      "at": "2026-09-01T17:42:09.593Z",
       "detail": "attempt 2"
     },
     {
       "phase": "RUNTIME_VERIFY",
       "state": "PASSED",
-      "at": "2026-09-01T16:23:51.003Z",
+      "at": "2026-09-01T17:42:13.820Z",
       "detail": "attempt 2: 2/2 text checks passed"
     },
     {
       "phase": "JUDGE",
       "state": "PASSED",
-      "at": "2026-09-01T16:23:51.003Z",
+      "at": "2026-09-01T17:42:13.820Z",
       "detail": "attempt 2 accepted"
     },
     {
       "phase": "COMPLETE",
       "state": "PASSED",
-      "at": "2026-09-01T16:23:51.003Z",
+      "at": "2026-09-01T17:42:13.820Z",
       "detail": "converged in 2 attempt(s)"
     },
     {
       "phase": "CLEANUP",
       "state": "STARTED",
-      "at": "2026-09-01T16:23:51.003Z"
+      "at": "2026-09-01T17:42:13.820Z"
     },
     {
       "phase": "CLEANUP",
       "state": "PASSED",
-      "at": "2026-09-01T16:23:51.569Z",
+      "at": "2026-09-01T17:42:14.117Z",
       "detail": "0 run-owned sandboxes"
     }
   ],
   "status": "PASSED",
-  "sandboxFingerprint": "fe255abc6f44cc28",
+  "sandboxFingerprint": "2323ba6c33ca3039",
   "baseline": {
     "kind": "text",
     "bodyTextSha256": "ee86e07baa8a0f1f86dd14faa5a198340356ec04d7233c614013c1447b0d4214",
@@ -215,10 +215,10 @@
     "screenshotPath": "artifacts-fixture-ai/final.png",
     "screenshotSha256": "a016ab3237b35b9a6e1425fb6a14d74043247cadb0acf650900ba02f676cb006"
   },
-  "previewUrl": "https://fe255abc6f44cc28df0c-4173.preview.getsolari.com/",
+  "previewUrl": "https://2323ba6c33ca303928d4-4173.preview.getsolari.com/",
   "visualParity": false,
   "cleanup": {
     "ownedSandboxesAfterCleanup": 0
   },
-  "finishedAt": "2026-09-01T16:23:51.569Z"
+  "finishedAt": "2026-09-01T17:42:14.117Z"
 }

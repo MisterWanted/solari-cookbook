@@ -29,7 +29,7 @@
     "systemPrompt": "You are a precise senior coding agent. Respect scope exactly. Prefer the smallest correct change. Output strict JSON only.",
     "taskPrompt": "Fix GitHub issue Marthijs-Berfelo/buddy-harmony#482 at this exact immutable commit. Runtime evidence is the source of truth: /scale has exactly six buttons; four are unnamed (menu/hamburger, language selector, settings gear, print), while Key and Scale already have accessible names and MUST stay unchanged. Add localized accessible names through the existing i18n structure. react-flags-select renders its own button and its props do not accept aria-label, so solve that without changing the dependency or visual layout. Only edit allowlisted files. Preserve behavior and visuals. Match repository Prettier/ESLint formatting exactly; lint permits zero warnings.",
     "maxTokens": 12000,
-    "maxAttempts": 2,
+    "maxAttempts": 3,
     "reasoningMode": "disabled"
   },
   "verificationCommands": [
@@ -62,6 +62,9 @@
         "Key",
         "Scale"
       ]
+    },
+    "localStorage": {
+      "i18nextLng": "en-US"
     }
   },
   "analysis": {

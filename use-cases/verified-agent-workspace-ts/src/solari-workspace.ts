@@ -1,4 +1,5 @@
 import { SolariClient } from "@solarisdk/sdk"
+import { randomUUID } from "node:crypto"
 import type { CommandEvidence } from "./types.js"
 import { scrubOutput } from "./evidence.js"
 
@@ -8,6 +9,7 @@ export class SolariWorkspaceProvider {
   private readonly client: SolariClient
   private sandbox: SandboxHandle | null = null
   private ownedSandboxId: string | null = null
+  private readonly runMetadata = { verifiedAgentRunId: randomUUID() }
   private previewPid: number | null = null
 
   constructor(apiKey: string) {
@@ -18,6 +20,7 @@ export class SolariWorkspaceProvider {
     try {
       this.sandbox = await this.client.sandboxes.create({
         template: "base",
+        metadata: this.runMetadata,
         timeoutMs: 10 * 60_000,
       })
       this.ownedSandboxId = this.sandbox.sandboxId
@@ -26,8 +29,7 @@ export class SolariWorkspaceProvider {
       if (mkdir.exitCode !== 0) throw new Error(`Failed to prepare workspace: ${mkdir.stderr}`)
       return this.sandbox.sandboxId
     } catch (error) {
-      const ownedSandboxId = this.sandbox?.sandboxId ?? this.ownedSandboxId
-      if (ownedSandboxId) await this.client.sandboxes.kill(ownedSandboxId).catch(() => {})
+      await this.recoverOwnedSandboxes().catch(() => {})
       this.sandbox = null
       throw error
     }
@@ -136,11 +138,11 @@ export class SolariWorkspaceProvider {
   }
 
   async ownedSandboxCount(): Promise<number> {
-    if (!this.ownedSandboxId) return 0
-    for await (const sandbox of this.client.sandboxes.listAll()) {
-      if (sandbox.sandboxId === this.ownedSandboxId) return 1
+    let count = 0
+    for await (const sandbox of this.client.sandboxes.listAll({ metadata: this.runMetadata })) {
+      if (this.matchesRunMetadata(sandbox.metadata)) count += 1
     }
-    return 0
+    return count
   }
 
   async destroy(): Promise<void> {
@@ -149,6 +151,20 @@ export class SolariWorkspaceProvider {
       await this.sandbox.kill()
       this.sandbox = null
     }
+  }
+
+  private async recoverOwnedSandboxes(): Promise<void> {
+    const ids = new Set<string>()
+    const knownSandboxId = this.sandbox?.sandboxId ?? this.ownedSandboxId
+    if (knownSandboxId) ids.add(knownSandboxId)
+    for await (const sandbox of this.client.sandboxes.listAll({ metadata: this.runMetadata })) {
+      if (this.matchesRunMetadata(sandbox.metadata)) ids.add(sandbox.sandboxId)
+    }
+    for (const sandboxId of ids) await this.client.sandboxes.kill(sandboxId).catch(() => {})
+  }
+
+  private matchesRunMetadata(metadata: Record<string, string> | undefined): boolean {
+    return metadata?.verifiedAgentRunId === this.runMetadata.verifiedAgentRunId
   }
 
   private requireSandbox(): SandboxHandle {

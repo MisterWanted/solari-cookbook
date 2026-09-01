@@ -100,3 +100,14 @@ test("issue snapshots require a canonical path/hash pair and issue number", () =
   delete missingIssue.source.issue
   assert.throws(() => validateJobSpec(missingIssue), /issue snapshot requires source.issue/)
 })
+
+test("browser localStorage seed is typed and deterministic job policy", () => {
+  const seeded = structuredClone(validJob) as any
+  seeded.browser.localStorage = { i18nextLng: "en-US" }
+  const parsed = validateJobSpec(seeded)
+  assert.deepEqual(parsed.browser.localStorage, { i18nextLng: "en-US" })
+
+  const invalid = structuredClone(seeded) as any
+  invalid.browser.localStorage = { i18nextLng: false }
+  assert.throws(() => validateJobSpec(invalid), /browser.localStorage/)
+})

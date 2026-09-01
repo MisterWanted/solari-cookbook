@@ -55,11 +55,32 @@ test("failed create kills only the sandbox created by this provider", async () =
   assert.deepEqual(killed, ["owned"])
 })
 
+
+test("lost create response recovers only the sandbox tagged for this run", async () => {
+  const killed: string[] = []
+  let listFilter: unknown
+  const provider = new SolariWorkspaceProvider("test-key")
+  const runMetadata = (provider as any).runMetadata
+  Object.defineProperty(provider, "client", { value: { sandboxes: {
+    create: async () => { throw new Error("create response lost") },
+    kill: async (id: string) => { killed.push(id) },
+    listAll: async function* (options?: unknown) {
+      listFilter = options
+      yield { sandboxId: "owned-orphan", metadata: runMetadata, state: "running" }
+      yield { sandboxId: "someone-else", metadata: { verifiedAgentRunId: "different" }, state: "running" }
+    },
+  } } })
+  await assert.rejects(() => provider.create(), /create response lost/)
+  assert.deepEqual(listFilter, { metadata: runMetadata })
+  assert.deepEqual(killed, ["owned-orphan"])
+})
+
 test("cleanup detects an owned sandbox in any remaining state", async () => {
   let filter: unknown = "unset"
   const provider = new SolariWorkspaceProvider("test-key")
+  const runMetadata = (provider as any).runMetadata
   Object.defineProperty(provider, "ownedSandboxId", { value: "owned", writable: true })
-  Object.defineProperty(provider, "client", { value: { sandboxes: { listAll: async function* (options?: unknown) { filter = options; yield { sandboxId: "owned", state: "paused" } } } } })
+  Object.defineProperty(provider, "client", { value: { sandboxes: { listAll: async function* (options?: unknown) { filter = options; yield { sandboxId: "owned", state: "paused", metadata: runMetadata } } } } })
   assert.equal(await provider.ownedSandboxCount(), 1)
-  assert.equal(filter, undefined)
+  assert.deepEqual(filter, { metadata: runMetadata })
 })

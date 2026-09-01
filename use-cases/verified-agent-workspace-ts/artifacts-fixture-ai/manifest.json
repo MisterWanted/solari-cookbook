@@ -33,95 +33,95 @@
     {
       "phase": "SOURCE",
       "state": "STARTED",
-      "at": "2026-09-01T16:23:19.310Z",
+      "at": "2026-09-01T17:41:57.742Z",
       "detail": "https://github.com/MisterWanted/solari-cookbook.git@2efa5a792ce3"
     },
     {
       "phase": "SOURCE",
       "state": "PASSED",
-      "at": "2026-09-01T16:23:21.477Z",
+      "at": "2026-09-01T17:41:59.903Z",
       "detail": "2efa5a792ce34e7ee3ec28656b6dff637c923a40"
     },
     {
       "phase": "BASELINE",
       "state": "STARTED",
-      "at": "2026-09-01T16:23:21.477Z"
+      "at": "2026-09-01T17:41:59.903Z"
     },
     {
       "phase": "BASELINE",
       "state": "PASSED",
-      "at": "2026-09-01T16:23:33.152Z",
+      "at": "2026-09-01T17:42:04.499Z",
       "detail": "2/2 text checks passed"
     },
     {
       "phase": "MUTATE",
       "state": "STARTED",
-      "at": "2026-09-01T16:23:33.440Z",
+      "at": "2026-09-01T17:42:04.802Z",
       "detail": "attempt 1"
     },
     {
       "phase": "MUTATE",
       "state": "FAILED",
-      "at": "2026-09-01T16:23:35.582Z",
+      "at": "2026-09-01T17:42:07.064Z",
       "detail": "attempt 1: agent transport/protocol failure"
     },
     {
       "phase": "MUTATE",
       "state": "STARTED",
-      "at": "2026-09-01T16:23:35.582Z",
+      "at": "2026-09-01T17:42:07.064Z",
       "detail": "attempt 2"
     },
     {
       "phase": "MUTATE",
       "state": "PASSED",
-      "at": "2026-09-01T16:23:38.358Z",
+      "at": "2026-09-01T17:42:09.065Z",
       "detail": "attempt 2: 1 files"
     },
     {
       "phase": "STATIC_VERIFY",
       "state": "STARTED",
-      "at": "2026-09-01T16:23:38.358Z",
+      "at": "2026-09-01T17:42:09.065Z",
       "detail": "attempt 2"
     },
     {
       "phase": "STATIC_VERIFY",
       "state": "PASSED",
-      "at": "2026-09-01T16:23:38.885Z",
+      "at": "2026-09-01T17:42:09.593Z",
       "detail": "attempt 2: 1 gates"
     },
     {
       "phase": "RUNTIME_VERIFY",
       "state": "STARTED",
-      "at": "2026-09-01T16:23:38.885Z",
+      "at": "2026-09-01T17:42:09.593Z",
       "detail": "attempt 2"
     },
     {
       "phase": "RUNTIME_VERIFY",
       "state": "PASSED",
-      "at": "2026-09-01T16:23:51.003Z",
+      "at": "2026-09-01T17:42:13.820Z",
       "detail": "attempt 2: 2/2 text checks passed"
     },
     {
       "phase": "JUDGE",
       "state": "PASSED",
-      "at": "2026-09-01T16:23:51.003Z",
+      "at": "2026-09-01T17:42:13.820Z",
       "detail": "attempt 2 accepted"
     },
     {
       "phase": "COMPLETE",
       "state": "PASSED",
-      "at": "2026-09-01T16:23:51.003Z",
+      "at": "2026-09-01T17:42:13.820Z",
       "detail": "converged in 2 attempt(s)"
     },
     {
       "phase": "CLEANUP",
       "state": "STARTED",
-      "at": "2026-09-01T16:23:51.003Z"
+      "at": "2026-09-01T17:42:13.820Z"
     },
     {
       "phase": "CLEANUP",
       "state": "PASSED",
-      "at": "2026-09-01T16:23:51.569Z",
+      "at": "2026-09-01T17:42:14.117Z",
       "detail": "0 run-owned sandboxes"
     }
   ],
@@ -176,5 +176,5 @@
   "cleanup": {
     "ownedSandboxesAfterCleanup": 0
   },
-  "evidenceSha256": "f599f948c6eb67a83dec2e2ccb3eb7a7148c90974f49fd80da1dcf6137ed24b0"
+  "evidenceSha256": "c1789e4103bc1a3d0bc3b2083b309657e5592fbd03f0b8928107b981320b3640"
 }

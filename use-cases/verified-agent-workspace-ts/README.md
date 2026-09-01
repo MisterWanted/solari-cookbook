@@ -27,7 +27,7 @@ A job declares:
 - an immutable 40-character Git SHA;
 - the agent endpoint/model and explicit file allowlist;
 - bootstrap and verification commands;
-- preview command, port, and browser route;
+- preview command, port, browser route, and optional deterministic localStorage seed;
 - one typed browser verifier;
 - retry budget and evidence directory.
 
@@ -44,7 +44,7 @@ The job parser rejects mutable refs, non-canonical paths, cross-origin browser r
 
 The model credential is scoped to the single bounded-agent process through Solari command-level environment variables. Target bootstrap, tests, build, and preview processes never receive it. Captured command output also redacts every command-scoped secret value dynamically, independent of key prefix.
 
-The bounded edit agent validates the full edit plan in memory before writing files. Every attempt is checked against the allowlist, and bootstrap plus baseline must leave the Git tree clean before attribution begins. Static gates must pass without changing the attributed agent diff, and the independent browser judge must also pass. Preview processes run in an owned process group, so baseline and final observations cannot accidentally share a stale server. Sandbox cleanup is verified against the run-owned sandbox ID only, so unrelated concurrent Solari work neither fails nor gets killed by this job.
+The bounded edit agent validates the full edit plan in memory before writing files. Every attempt is checked against the allowlist, and bootstrap plus baseline must leave the Git tree clean before attribution begins. Static gates must pass without changing the attributed agent diff, and the independent browser judge must also pass. Preview processes run in an owned process group, so baseline and final observations cannot accidentally share a stale server. Each sandbox is tagged with a unique run metadata ID before creation. Cleanup and create-failure recovery query only that tag, so even a lost create response can recover its orphan without touching unrelated concurrent Solari work.
 
 Evidence stores hashes and sanitized logs, not raw patches, API keys, signed preview capabilities, raw sandbox capabilities, host paths, or absolute sandbox paths.
 
@@ -57,7 +57,7 @@ Two committed jobs exercise the same state machine with different verifier kinds
 | `jobs/buddy-harmony.json` | `Marthijs-Berfelo/buddy-harmony@9a6fea34...` | 4 unnamed buttons -> 0 while 6 buttons and existing `Key`/`Scale` names are preserved | 8 source/i18n files |
 | `jobs/fixture-ai.json` | `MisterWanted/solari-cookbook@2efa5a79...` | placeholder absent after repair and `AI repaired this UI in Solari` present | 1 HTML file |
 
-The Buddy job bootstraps checksum-pinned Node 24.15.0 and uses `npm ci`. It also commits the exact public issue context used for the run at `jobs/buddy-harmony-482.issue.json` and binds those canonical bytes with SHA-256 `1c85d0a268effc22c0f2603015c67bffa53067ca1f967552e2af9e6fb830191e`.
+The Buddy job bootstraps checksum-pinned Node 24.15.0 and uses `npm ci`. It also commits the exact public issue context used for the run at `jobs/buddy-harmony-482.issue.json` and binds those canonical bytes with SHA-256 `1c85d0a268effc22c0f2603015c67bffa53067ca1f967552e2af9e6fb830191e`. Its browser policy seeds `i18nextLng=en-US` before navigation so independent baseline/final sessions cannot drift languages and invalidate preserved-name comparisons.
 
 ## Run a live job
 

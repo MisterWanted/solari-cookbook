@@ -4,11 +4,16 @@ import { dirname, relative } from "node:path"
 import { sha256File, sha256Text } from "./evidence.js"
 import type { BrowserAuditEvidence, BrowserVerifier, ButtonAuditEvidence, TextAuditEvidence, TextExpectation } from "./job-spec.js"
 
-async function withPage<T>(apiKey: string, capabilityUrl: string, route: string, waitForSelector: string, fn: (page: any) => Promise<T>): Promise<T> {
+async function withPage<T>(apiKey: string, capabilityUrl: string, route: string, waitForSelector: string, localStorageSeed: Record<string, string> | undefined, fn: (page: any) => Promise<T>): Promise<T> {
   const solari = new Solari({ apiKey })
   const browser = await solari.launch()
   try {
     const page = await browser.newPage()
+    if (localStorageSeed && Object.keys(localStorageSeed).length > 0) {
+      await page.addInitScript((seed: Record<string, string>) => {
+        for (const [key, value] of Object.entries(seed)) localStorage.setItem(key, value)
+      }, localStorageSeed)
+    }
     await page.goto(capabilityUrl, { waitUntil: "networkidle" })
     await page.evaluate((nextRoute: string) => {
       history.pushState({}, "", nextRoute)
@@ -32,8 +37,8 @@ async function screenshot(page: any, screenshotPath: string) {
   }
 }
 
-export async function auditButtons(apiKey: string, capabilityUrl: string, route: string, waitForSelector: string, screenshotPath: string): Promise<ButtonAuditEvidence> {
-  return withPage(apiKey, capabilityUrl, route, waitForSelector, async (page) => {
+export async function auditButtons(apiKey: string, capabilityUrl: string, route: string, waitForSelector: string, localStorageSeed: Record<string, string> | undefined, screenshotPath: string): Promise<ButtonAuditEvidence> {
+  return withPage(apiKey, capabilityUrl, route, waitForSelector, localStorageSeed, async (page) => {
     const cdp = await page.context().newCDPSession(page)
     await cdp.send("Accessibility.enable")
     const tree = await cdp.send("Accessibility.getFullAXTree")
@@ -49,8 +54,8 @@ export async function auditButtons(apiKey: string, capabilityUrl: string, route:
   })
 }
 
-export async function auditText(apiKey: string, capabilityUrl: string, route: string, waitForSelector: string, expectation: TextExpectation, screenshotPath: string): Promise<TextAuditEvidence> {
-  return withPage(apiKey, capabilityUrl, route, waitForSelector, async (page) => {
+export async function auditText(apiKey: string, capabilityUrl: string, route: string, waitForSelector: string, localStorageSeed: Record<string, string> | undefined, expectation: TextExpectation, screenshotPath: string): Promise<TextAuditEvidence> {
+  return withPage(apiKey, capabilityUrl, route, waitForSelector, localStorageSeed, async (page) => {
     const body = await page.locator("body").innerText()
     const checks: TextAuditEvidence["checks"] = []
     if (expectation.mustIncludeText) checks.push({ type: "include", text: expectation.mustIncludeText, passed: body.includes(expectation.mustIncludeText) })
@@ -60,6 +65,6 @@ export async function auditText(apiKey: string, capabilityUrl: string, route: st
 }
 
 export async function auditBrowser(apiKey: string, capabilityUrl: string, browser: BrowserVerifier, phase: "baseline" | "final", screenshotPath: string): Promise<BrowserAuditEvidence> {
-  if (browser.kind === "button-accessibility") return auditButtons(apiKey, capabilityUrl, browser.route, browser.waitForSelector, screenshotPath)
-  return auditText(apiKey, capabilityUrl, browser.route, browser.waitForSelector, browser[phase], screenshotPath)
+  if (browser.kind === "button-accessibility") return auditButtons(apiKey, capabilityUrl, browser.route, browser.waitForSelector, browser.localStorage, screenshotPath)
+  return auditText(apiKey, capabilityUrl, browser.route, browser.waitForSelector, browser.localStorage, browser[phase], screenshotPath)
 }

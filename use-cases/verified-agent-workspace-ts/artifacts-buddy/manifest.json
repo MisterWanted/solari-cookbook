@@ -17,7 +17,7 @@
     "safetyInvariant": "Only eight allowlisted source/i18n files may change; six buttons remain six; existing Key and Scale names remain; the screenshot stays visually identical while unnamed buttons go 4 -> 0"
   },
   "policy": {
-    "jobSpecSha256": "6318f249a2ff642567f9550ee784638a78af671615c7c8ca5a7d29e23d1b8614",
+    "jobSpecSha256": "9931530b5d13f3e7a44bcb9b3fd249829b56b2a3dcb3ad90e9820dd7bc63ec8f",
     "agent": {
       "model": "glm-5.3",
       "endpoint": "https://api.z.ai/api/coding/paas/v4/chat/completions",
@@ -31,7 +31,7 @@
         "public/locales/en/settings.json",
         "public/locales/nl/settings.json"
       ],
-      "maxAttempts": 2,
+      "maxAttempts": 3,
       "reasoningMode": "disabled"
     },
     "verificationCommands": [
@@ -46,107 +46,107 @@
     {
       "phase": "SOURCE",
       "state": "STARTED",
-      "at": "2026-09-01T16:21:17.954Z",
+      "at": "2026-09-01T17:39:30.504Z",
       "detail": "https://github.com/Marthijs-Berfelo/buddy-harmony.git@9a6fea34db91"
     },
     {
       "phase": "SOURCE",
       "state": "PASSED",
-      "at": "2026-09-01T16:21:26.774Z",
+      "at": "2026-09-01T17:39:39.947Z",
       "detail": "9a6fea34db91d535b9d4e255d19c130704da3d61"
     },
     {
       "phase": "BASELINE",
       "state": "STARTED",
-      "at": "2026-09-01T16:21:26.775Z"
+      "at": "2026-09-01T17:39:39.948Z"
     },
     {
       "phase": "BASELINE",
       "state": "PASSED",
-      "at": "2026-09-01T16:21:54.141Z",
+      "at": "2026-09-01T17:40:07.280Z",
       "detail": "4 unnamed / 6 buttons"
     },
     {
       "phase": "MUTATE",
       "state": "STARTED",
-      "at": "2026-09-01T16:21:55.416Z",
+      "at": "2026-09-01T17:40:08.558Z",
       "detail": "attempt 1"
     },
     {
       "phase": "MUTATE",
       "state": "PASSED",
-      "at": "2026-09-01T16:22:10.234Z",
+      "at": "2026-09-01T17:40:27.823Z",
       "detail": "attempt 1: 8 files"
     },
     {
       "phase": "STATIC_VERIFY",
       "state": "STARTED",
-      "at": "2026-09-01T16:22:10.234Z",
+      "at": "2026-09-01T17:40:27.823Z",
       "detail": "attempt 1"
     },
     {
       "phase": "STATIC_VERIFY",
       "state": "FAILED",
-      "at": "2026-09-01T16:22:29.402Z",
-      "detail": "attempt 1: 1 failures"
+      "at": "2026-09-01T17:40:46.321Z",
+      "detail": "attempt 1: 3 failures"
     },
     {
       "phase": "MUTATE",
       "state": "STARTED",
-      "at": "2026-09-01T16:22:29.402Z",
+      "at": "2026-09-01T17:40:46.321Z",
       "detail": "attempt 2"
     },
     {
       "phase": "MUTATE",
       "state": "PASSED",
-      "at": "2026-09-01T16:22:32.221Z",
+      "at": "2026-09-01T17:40:51.235Z",
       "detail": "attempt 2: 8 files"
     },
     {
       "phase": "STATIC_VERIFY",
       "state": "STARTED",
-      "at": "2026-09-01T16:22:32.221Z",
+      "at": "2026-09-01T17:40:51.235Z",
       "detail": "attempt 2"
     },
     {
       "phase": "STATIC_VERIFY",
       "state": "PASSED",
-      "at": "2026-09-01T16:22:50.879Z",
+      "at": "2026-09-01T17:41:10.421Z",
       "detail": "attempt 2: 4 gates"
     },
     {
       "phase": "RUNTIME_VERIFY",
       "state": "STARTED",
-      "at": "2026-09-01T16:22:50.879Z",
+      "at": "2026-09-01T17:41:10.422Z",
       "detail": "attempt 2"
     },
     {
       "phase": "RUNTIME_VERIFY",
       "state": "PASSED",
-      "at": "2026-09-01T16:23:03.001Z",
+      "at": "2026-09-01T17:41:17.642Z",
       "detail": "attempt 2: 0 unnamed / 6 buttons"
     },
     {
       "phase": "JUDGE",
       "state": "PASSED",
-      "at": "2026-09-01T16:23:03.001Z",
+      "at": "2026-09-01T17:41:17.642Z",
       "detail": "attempt 2 accepted"
     },
     {
       "phase": "COMPLETE",
       "state": "PASSED",
-      "at": "2026-09-01T16:23:03.001Z",
+      "at": "2026-09-01T17:41:17.642Z",
       "detail": "converged in 2 attempt(s)"
     },
     {
       "phase": "CLEANUP",
       "state": "STARTED",
-      "at": "2026-09-01T16:23:03.001Z"
+      "at": "2026-09-01T17:41:17.642Z"
     },
     {
       "phase": "CLEANUP",
       "state": "PASSED",
-      "at": "2026-09-01T16:23:03.571Z",
+      "at": "2026-09-01T17:41:17.931Z",
       "detail": "0 run-owned sandboxes"
     }
   ],
@@ -175,7 +175,7 @@
       "src/common/toolbar/Toolbar.tsx",
       "src/common/toolbar/components/SettingsTools.tsx"
     ],
-    "diffSha256": "da74367ca8285674ded79a6f22f24c6070cef13e72ee8d82d7737a1137fa22be",
+    "diffSha256": "a8b0618a8ac786c6eb796b0fca54719199e9168571b64066ed039b7534c3c0c3",
     "attempts": 2
   },
   "verification": [
@@ -204,7 +204,7 @@
       "Menu",
       "Settings",
       "Print scale",
-      "Language",
+      "Select language",
       "Key",
       "Scale"
     ],
@@ -229,12 +229,12 @@
     {
       "index": 3,
       "before": "",
-      "after": "Language"
+      "after": "Select language"
     }
   ],
   "visualParity": true,
   "cleanup": {
     "ownedSandboxesAfterCleanup": 0
   },
-  "evidenceSha256": "6ae2fed592fb229347d6b9b47755fcdbd23065082df8a9dc6e0c76b307f70ff6"
+  "evidenceSha256": "c400f1885c2bb618cb4f9363d3e644e3ffb786d0de659665b651ea39d55ed63d"
 }

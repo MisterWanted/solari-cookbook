@@ -43,6 +43,7 @@ export type BrowserVerifier =
       kind: "button-accessibility"
       route: string
       waitForSelector: string
+      localStorage?: Record<string, string>
       baseline: BaselineButtonExpectation
       final: FinalButtonExpectation
     }
@@ -50,6 +51,7 @@ export type BrowserVerifier =
       kind: "text"
       route: string
       waitForSelector: string
+      localStorage?: Record<string, string>
       baseline: TextExpectation
       final: TextExpectation
     }
@@ -142,6 +144,15 @@ function optionalString(value: unknown, name: string): string | undefined {
   return value === undefined ? undefined : string(value, name)
 }
 
+function optionalStringRecord(value: unknown, name: string): Record<string, string> | undefined {
+  if (value === undefined) return undefined
+  const record = object(value, name)
+  for (const [key, entry] of Object.entries(record)) {
+    if (!key.trim() || typeof entry !== "string") throw new Error(`${name} must map non-empty string keys to string values`)
+  }
+  return record as Record<string, string>
+}
+
 function optionalSha256(value: unknown, name: string): string | undefined {
   if (value === undefined) return undefined
   const hash = string(value, name)
@@ -153,6 +164,7 @@ function parseBrowser(browser: Record<string, unknown>): BrowserVerifier {
   const kind = string(browser.kind, "browser.kind")
   const route = sameOriginPath(browser.route, "browser.route")
   const waitForSelector = string(browser.waitForSelector, "browser.waitForSelector")
+  const localStorage = optionalStringRecord(browser.localStorage, "browser.localStorage")
   const baseline = object(browser.baseline, "browser.baseline")
   const final = object(browser.final, "browser.final")
   if (kind === "button-accessibility") {
@@ -160,6 +172,7 @@ function parseBrowser(browser: Record<string, unknown>): BrowserVerifier {
       kind,
       route,
       waitForSelector,
+      localStorage,
       baseline: {
         buttonCount: baseline.buttonCount === undefined ? undefined : integer(baseline.buttonCount, "browser.baseline.buttonCount"),
         unnamedButtonCount: integer(baseline.unnamedButtonCount, "browser.baseline.unnamedButtonCount"),
@@ -183,7 +196,7 @@ function parseBrowser(browser: Record<string, unknown>): BrowserVerifier {
     }
     if (!baselineExpectation.mustIncludeText && !baselineExpectation.mustExcludeText) throw new Error("browser.baseline must define a text expectation")
     if (!finalExpectation.mustIncludeText && !finalExpectation.mustExcludeText) throw new Error("browser.final must define a text expectation")
-    return { kind, route, waitForSelector, baseline: baselineExpectation, final: finalExpectation }
+    return { kind, route, waitForSelector, localStorage, baseline: baselineExpectation, final: finalExpectation }
   }
   throw new Error("browser.kind must be button-accessibility or text")
 }
