@@ -7,20 +7,30 @@ type SandboxHandle = Awaited<ReturnType<SolariClient["sandboxes"]["create"]>>
 export class SolariWorkspaceProvider {
   private readonly client: SolariClient
   private sandbox: SandboxHandle | null = null
+  private ownedSandboxId: string | null = null
+  private previewPid: number | null = null
 
   constructor(apiKey: string) {
     this.client = new SolariClient({ apiKey })
   }
 
   async create(): Promise<string> {
-    this.sandbox = await this.client.sandboxes.create({
-      template: "base",
-      timeoutMs: 10 * 60_000,
-    })
-    await this.sandbox.connect()
-    const mkdir = await this.sandbox.commands.run("mkdir", { args: ["-p", "/workspace"] })
-    if (mkdir.exitCode !== 0) throw new Error(`Failed to prepare workspace: ${mkdir.stderr}`)
-    return this.sandbox.sandboxId
+    try {
+      this.sandbox = await this.client.sandboxes.create({
+        template: "base",
+        timeoutMs: 10 * 60_000,
+      })
+      this.ownedSandboxId = this.sandbox.sandboxId
+      await this.sandbox.connect()
+      const mkdir = await this.sandbox.commands.run("mkdir", { args: ["-p", "/workspace"] })
+      if (mkdir.exitCode !== 0) throw new Error(`Failed to prepare workspace: ${mkdir.stderr}`)
+      return this.sandbox.sandboxId
+    } catch (error) {
+      const ownedSandboxId = this.sandbox?.sandboxId ?? this.ownedSandboxId
+      if (ownedSandboxId) await this.client.sandboxes.kill(ownedSandboxId).catch(() => {})
+      this.sandbox = null
+      throw error
+    }
   }
 
   async clone(repoUrl: string, ref?: string): Promise<void> {
@@ -29,27 +39,44 @@ export class SolariWorkspaceProvider {
     if (ref) await sandbox.git.checkout(ref, { cwd: "/workspace/repo" })
   }
 
-  async setEnvironment(vars: Record<string, string>): Promise<void> {
-    if (Object.keys(vars).length === 0) return
-    await this.requireSandbox().env(vars)
+
+  async assertPathsWithinRepo(paths: string[]): Promise<void> {
+    const sandbox = this.requireSandbox()
+    for (const path of paths) {
+      const result = await sandbox.commands.run("realpath", {
+        args: ["--", path],
+        cwd: "/workspace/repo",
+        timeoutMs: 10_000,
+      })
+      if (result.exitCode !== 0) throw new Error(`allowlisted path cannot be resolved: ${path}`)
+      const expected = `/workspace/repo/${path}`
+      if (result.stdout.trim() !== expected) throw new Error(`allowlisted path resolves outside or through a symlink: ${path}`)
+    }
   }
 
-  async exec(command: string): Promise<CommandEvidence> {
+  async writeText(path: string, content: string): Promise<void> {
+    await this.requireSandbox().files.write(path, content)
+  }
+
+  async exec(command: string, timeoutMs = 8 * 60_000, env?: Record<string, string>): Promise<CommandEvidence> {
     const sandbox = this.requireSandbox()
     const result = await sandbox.commands.run("sh", {
       args: ["-lc", command],
       cwd: "/workspace/repo",
-      timeoutMs: 8 * 60_000,
+      timeoutMs,
+      env,
     })
+    const secrets = Object.values(env ?? {})
     return {
-      command: scrubOutput(command),
+      command: scrubOutput(command, secrets),
       exitCode: result.exitCode,
-      stdout: scrubOutput(result.stdout),
-      stderr: scrubOutput(result.stderr),
+      stdout: scrubOutput(result.stdout, secrets),
+      stderr: scrubOutput(result.stderr, secrets),
     }
   }
 
   async start(command: string): Promise<void> {
+    await this.stop()
     const sandbox = this.requireSandbox()
     await sandbox.files.write(
       "/tmp/verified-agent-preview.sh",
@@ -58,12 +85,27 @@ export class SolariWorkspaceProvider {
     const result = await sandbox.commands.run("sh", {
       args: [
         "-lc",
-        "nohup sh /tmp/verified-agent-preview.sh >/tmp/verified-agent-preview.log 2>&1 </dev/null &",
+        "command -v setsid >/dev/null 2>&1 || { echo setsid-missing >&2; exit 127; }; nohup setsid sh /tmp/verified-agent-preview.sh >/tmp/verified-agent-preview.log 2>&1 </dev/null & echo $!",
       ],
     })
-    if (result.exitCode !== 0) {
-      throw new Error(`Failed to start preview: ${scrubOutput(result.stderr)}`)
-    }
+    if (result.exitCode !== 0) throw new Error(`Failed to start preview: ${scrubOutput(result.stderr)}`)
+    const pid = Number(result.stdout.trim())
+    if (!Number.isInteger(pid) || pid < 1) throw new Error(`Failed to capture preview pid: ${scrubOutput(result.stdout)}`)
+    this.previewPid = pid
+  }
+
+  async stop(): Promise<void> {
+    if (this.previewPid === null || !this.sandbox) return
+    const pid = this.previewPid
+    this.previewPid = null
+    await this.sandbox.commands.run("sh", {
+      args: ["-lc", `kill -TERM -${pid} 2>/dev/null || true; sleep 0.2; kill -KILL -${pid} 2>/dev/null || true`],
+      timeoutMs: 10_000,
+    })
+  }
+
+  async previewLog(): Promise<string> {
+    return scrubOutput(await this.requireSandbox().files.readText("/tmp/verified-agent-preview.log").catch(() => ""))
   }
 
   async gitDiff(): Promise<string> {
@@ -93,8 +135,17 @@ export class SolariWorkspaceProvider {
     return (await this.requireSandbox().previewUrl(port)).url
   }
 
+  async ownedSandboxCount(): Promise<number> {
+    if (!this.ownedSandboxId) return 0
+    for await (const sandbox of this.client.sandboxes.listAll()) {
+      if (sandbox.sandboxId === this.ownedSandboxId) return 1
+    }
+    return 0
+  }
+
   async destroy(): Promise<void> {
     if (this.sandbox) {
+      await this.stop().catch(() => {})
       await this.sandbox.kill()
       this.sandbox = null
     }

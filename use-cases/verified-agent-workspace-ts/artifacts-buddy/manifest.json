@@ -1,0 +1,240 @@
+{
+  "version": 1,
+  "status": "PASSED",
+  "engine": "verified-agent-runtime",
+  "job": "buddy-harmony-482-a11y",
+  "source": {
+    "repository": "https://github.com/Marthijs-Berfelo/buddy-harmony.git",
+    "ref": "9a6fea34db91d535b9d4e255d19c130704da3d61",
+    "issue": 482,
+    "issueSnapshotPath": "jobs/buddy-harmony-482.issue.json",
+    "issueSnapshotSha256": "1c85d0a268effc22c0f2603015c67bffa53067ca1f967552e2af9e6fb830191e",
+    "headSha": "9a6fea34db91d535b9d4e255d19c130704da3d61"
+  },
+  "methodology": {
+    "method": "pstack runtime-first blast-radius: issue text is a hypothesis; the running app is the source of truth",
+    "hypothesis": "Issue #482 correctly reports four unnamed controls but its affected-element list is stale: Key/Scale may already be named and the menu button may be the actual fourth failure",
+    "safetyInvariant": "Only eight allowlisted source/i18n files may change; six buttons remain six; existing Key and Scale names remain; the screenshot stays visually identical while unnamed buttons go 4 -> 0"
+  },
+  "policy": {
+    "jobSpecSha256": "6318f249a2ff642567f9550ee784638a78af671615c7c8ca5a7d29e23d1b8614",
+    "agent": {
+      "model": "glm-5.3",
+      "endpoint": "https://api.z.ai/api/coding/paas/v4/chat/completions",
+      "allowlist": [
+        "src/common/layout/Header.tsx",
+        "src/common/layout/components/LanguageSelector.tsx",
+        "src/common/toolbar/components/SettingsTools.tsx",
+        "src/common/toolbar/Toolbar.tsx",
+        "public/locales/en/common.json",
+        "public/locales/nl/common.json",
+        "public/locales/en/settings.json",
+        "public/locales/nl/settings.json"
+      ],
+      "maxAttempts": 2,
+      "reasoningMode": "disabled"
+    },
+    "verificationCommands": [
+      "export PATH=/opt/node/bin:$PATH; npm run typecheck",
+      "export PATH=/opt/node/bin:$PATH; npm run lint -- --max-warnings=0",
+      "export PATH=/opt/node/bin:$PATH; npm test -- --reporter=dot",
+      "export PATH=/opt/node/bin:$PATH; npm run build -- --base /"
+    ],
+    "browserKind": "button-accessibility"
+  },
+  "phases": [
+    {
+      "phase": "SOURCE",
+      "state": "STARTED",
+      "at": "2026-09-01T16:21:17.954Z",
+      "detail": "https://github.com/Marthijs-Berfelo/buddy-harmony.git@9a6fea34db91"
+    },
+    {
+      "phase": "SOURCE",
+      "state": "PASSED",
+      "at": "2026-09-01T16:21:26.774Z",
+      "detail": "9a6fea34db91d535b9d4e255d19c130704da3d61"
+    },
+    {
+      "phase": "BASELINE",
+      "state": "STARTED",
+      "at": "2026-09-01T16:21:26.775Z"
+    },
+    {
+      "phase": "BASELINE",
+      "state": "PASSED",
+      "at": "2026-09-01T16:21:54.141Z",
+      "detail": "4 unnamed / 6 buttons"
+    },
+    {
+      "phase": "MUTATE",
+      "state": "STARTED",
+      "at": "2026-09-01T16:21:55.416Z",
+      "detail": "attempt 1"
+    },
+    {
+      "phase": "MUTATE",
+      "state": "PASSED",
+      "at": "2026-09-01T16:22:10.234Z",
+      "detail": "attempt 1: 8 files"
+    },
+    {
+      "phase": "STATIC_VERIFY",
+      "state": "STARTED",
+      "at": "2026-09-01T16:22:10.234Z",
+      "detail": "attempt 1"
+    },
+    {
+      "phase": "STATIC_VERIFY",
+      "state": "FAILED",
+      "at": "2026-09-01T16:22:29.402Z",
+      "detail": "attempt 1: 1 failures"
+    },
+    {
+      "phase": "MUTATE",
+      "state": "STARTED",
+      "at": "2026-09-01T16:22:29.402Z",
+      "detail": "attempt 2"
+    },
+    {
+      "phase": "MUTATE",
+      "state": "PASSED",
+      "at": "2026-09-01T16:22:32.221Z",
+      "detail": "attempt 2: 8 files"
+    },
+    {
+      "phase": "STATIC_VERIFY",
+      "state": "STARTED",
+      "at": "2026-09-01T16:22:32.221Z",
+      "detail": "attempt 2"
+    },
+    {
+      "phase": "STATIC_VERIFY",
+      "state": "PASSED",
+      "at": "2026-09-01T16:22:50.879Z",
+      "detail": "attempt 2: 4 gates"
+    },
+    {
+      "phase": "RUNTIME_VERIFY",
+      "state": "STARTED",
+      "at": "2026-09-01T16:22:50.879Z",
+      "detail": "attempt 2"
+    },
+    {
+      "phase": "RUNTIME_VERIFY",
+      "state": "PASSED",
+      "at": "2026-09-01T16:23:03.001Z",
+      "detail": "attempt 2: 0 unnamed / 6 buttons"
+    },
+    {
+      "phase": "JUDGE",
+      "state": "PASSED",
+      "at": "2026-09-01T16:23:03.001Z",
+      "detail": "attempt 2 accepted"
+    },
+    {
+      "phase": "COMPLETE",
+      "state": "PASSED",
+      "at": "2026-09-01T16:23:03.001Z",
+      "detail": "converged in 2 attempt(s)"
+    },
+    {
+      "phase": "CLEANUP",
+      "state": "STARTED",
+      "at": "2026-09-01T16:23:03.001Z"
+    },
+    {
+      "phase": "CLEANUP",
+      "state": "PASSED",
+      "at": "2026-09-01T16:23:03.571Z",
+      "detail": "0 run-owned sandboxes"
+    }
+  ],
+  "baseline": {
+    "kind": "button-accessibility",
+    "buttonCount": 6,
+    "unnamedButtonCount": 4,
+    "buttonNames": [
+      "",
+      "",
+      "",
+      "",
+      "Key",
+      "Scale"
+    ],
+    "screenshotSha256": "33cc87c9c9673735e0ce734e1b0ec0a79f16f264555b9329f885bb23e1adc648"
+  },
+  "mutation": {
+    "changedFiles": [
+      "public/locales/en/common.json",
+      "public/locales/en/settings.json",
+      "public/locales/nl/common.json",
+      "public/locales/nl/settings.json",
+      "src/common/layout/Header.tsx",
+      "src/common/layout/components/LanguageSelector.tsx",
+      "src/common/toolbar/Toolbar.tsx",
+      "src/common/toolbar/components/SettingsTools.tsx"
+    ],
+    "diffSha256": "da74367ca8285674ded79a6f22f24c6070cef13e72ee8d82d7737a1137fa22be",
+    "attempts": 2
+  },
+  "verification": [
+    {
+      "command": "export PATH=/opt/node/bin:$PATH; npm run typecheck",
+      "exitCode": 0
+    },
+    {
+      "command": "export PATH=/opt/node/bin:$PATH; npm run lint -- --max-warnings=0",
+      "exitCode": 0
+    },
+    {
+      "command": "export PATH=/opt/node/bin:$PATH; npm test -- --reporter=dot",
+      "exitCode": 0
+    },
+    {
+      "command": "export PATH=/opt/node/bin:$PATH; npm run build -- --base /",
+      "exitCode": 0
+    }
+  ],
+  "final": {
+    "kind": "button-accessibility",
+    "buttonCount": 6,
+    "unnamedButtonCount": 0,
+    "buttonNames": [
+      "Menu",
+      "Settings",
+      "Print scale",
+      "Language",
+      "Key",
+      "Scale"
+    ],
+    "screenshotSha256": "33cc87c9c9673735e0ce734e1b0ec0a79f16f264555b9329f885bb23e1adc648"
+  },
+  "accessibilityDelta": [
+    {
+      "index": 0,
+      "before": "",
+      "after": "Menu"
+    },
+    {
+      "index": 1,
+      "before": "",
+      "after": "Settings"
+    },
+    {
+      "index": 2,
+      "before": "",
+      "after": "Print scale"
+    },
+    {
+      "index": 3,
+      "before": "",
+      "after": "Language"
+    }
+  ],
+  "visualParity": true,
+  "cleanup": {
+    "ownedSandboxesAfterCleanup": 0
+  },
+  "evidenceSha256": "6ae2fed592fb229347d6b9b47755fcdbd23065082df8a9dc6e0c76b307f70ff6"
+}

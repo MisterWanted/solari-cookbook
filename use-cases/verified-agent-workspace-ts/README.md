@@ -1,96 +1,110 @@
-# Verified agent workspace
+# Verified Agent Runtime
 
-Run a real web repository in a fresh Solari sandbox, execute its checks, publish
-its dev server, and verify the resulting UI from a separate Solari cloud browser.
-The output is a durable evidence bundle instead of a bare "agent says done".
+Run an AI coding agent inside a fresh Solari sandbox, judge the result from an independent Solari Browser, and keep a tamper-evident proof bundle.
 
-The flow is intentionally provider-shaped:
+The runtime treats issue text and agent output as hypotheses. Only runtime observations and explicit gates can produce `PASSED`.
 
 ```text
-repo/ref -> sandbox -> install -> optional agent -> test -> preview -> browser -> evidence
+immutable repo SHA
+      |
+      v
+ SOURCE -> BASELINE -> MUTATE -> STATIC_VERIFY -> RUNTIME_VERIFY -> JUDGE
+                ^                                              |
+                |-------------- bounded retry -----------------|
+                                                               v
+                                                           EVIDENCE
+                                                               |
+                                                               v
+                                                            CLEANUP
 ```
 
-Evidence includes the exact git SHA, command exit codes and output, a token-free
-preview origin, browser title, a screenshot, and the screenshot SHA-256 digest.
-When the worktree changes, evidence also records changed paths and a SHA-256 of
-the git diff without persisting the raw patch.
+## What is generic
 
-## Why this exists
+`run-job.ts` contains the execution state machine. Repository-specific behavior lives in a validated JSON job spec under `jobs/`.
 
-A green build is not proof that an agent changed the product correctly. Dev servers
-can boot while the UI is blank, stale, or functionally wrong. This workflow uses
-separate Solari compute and browser sessions so the final assertion observes the
-real public preview rather than trusting the process that produced it.
+A job declares:
 
-The optional `AGENT_CMD` keeps the executor replaceable: the same verification
-path can wrap Pi, Codex, OpenCode, or another coding agent.
+- an immutable 40-character Git SHA;
+- the agent endpoint/model and explicit file allowlist;
+- bootstrap and verification commands;
+- preview command, port, and browser route;
+- one typed browser verifier;
+- retry budget and evidence directory.
 
-## Run
+The current verifier kinds are:
+
+- `button-accessibility`: compare the browser accessibility tree before and after;
+- `text`: assert included/excluded UI text without storing the page body.
+
+Adding a job does not require modifying the runtime.
+
+## Safety and blast radius
+
+The job parser rejects mutable refs, non-canonical paths, cross-origin browser routes, duplicate allowlist entries, and type coercion. Each allowlisted target file is also resolved inside the sandbox before mutation; symlink or realpath redirection is rejected.
+
+The model credential is scoped to the single bounded-agent process through Solari command-level environment variables. Target bootstrap, tests, build, and preview processes never receive it. Captured command output also redacts every command-scoped secret value dynamically, independent of key prefix.
+
+The bounded edit agent validates the full edit plan in memory before writing files. Every attempt is checked against the allowlist, and bootstrap plus baseline must leave the Git tree clean before attribution begins. Static gates must pass without changing the attributed agent diff, and the independent browser judge must also pass. Preview processes run in an owned process group, so baseline and final observations cannot accidentally share a stale server. Sandbox cleanup is verified against the run-owned sandbox ID only, so unrelated concurrent Solari work neither fails nor gets killed by this job.
+
+Evidence stores hashes and sanitized logs, not raw patches, API keys, signed preview capabilities, raw sandbox capabilities, host paths, or absolute sandbox paths.
+
+## Real proofs
+
+Two committed jobs exercise the same state machine with different verifier kinds.
+
+| Job | Immutable target | Browser proof | Mutation scope |
+| --- | --- | --- | --- |
+| `jobs/buddy-harmony.json` | `Marthijs-Berfelo/buddy-harmony@9a6fea34...` | 4 unnamed buttons -> 0 while 6 buttons and existing `Key`/`Scale` names are preserved | 8 source/i18n files |
+| `jobs/fixture-ai.json` | `MisterWanted/solari-cookbook@2efa5a79...` | placeholder absent after repair and `AI repaired this UI in Solari` present | 1 HTML file |
+
+The Buddy job bootstraps checksum-pinned Node 24.15.0 and uses `npm ci`. It also commits the exact public issue context used for the run at `jobs/buddy-harmony-482.issue.json` and binds those canonical bytes with SHA-256 `1c85d0a268effc22c0f2603015c67bffa53067ca1f967552e2af9e6fb830191e`.
+
+## Run a live job
 
 ```bash
-cp .env.example .env
-# edit the values, then export them however you prefer
-set -a; . ./.env; set +a
-npm install
-npm start
+npm ci
+export SOLARI_API_KEY=...
+export ZAI_CODING_PLAN_API_KEY=...
+npm run demo:buddy
+# or
+npm run demo:fixture
 ```
 
-The target repository must expose a web server on `PORT`. Override the install,
-test, and start commands for pnpm, Python, Bun, or another stack. `AGENT_CMD` is
-optional: point it at Pi, Codex, OpenCode, or any other CLI present in the VM.
-Use `FORWARD_ENV` for an explicit comma-separated allowlist of host environment
-variables the agent needs; values are injected into the sandbox and are never
-written to evidence.
+The agent provider is job data, not runtime code. A different OpenAI-compatible coding endpoint can be used by changing the job spec and secret environment name.
 
-## Output
+## Verify committed evidence without secrets
 
-A successful run creates:
+```bash
+npm run check
+```
+
+`check` runs TypeScript, unit tests, then verifies both committed proof bundles. The verifier recomputes:
+
+- job-spec SHA-256 and the complete public runtime policy (model, endpoint, allowlist, retry budget, commands, verifier kind);
+- immutable repository/checkout identity plus the committed issue-snapshot SHA-256 when present;
+- exactly one final accepted attempt, its non-empty diff hash, allowlist, exact gate commands, and zero exit codes;
+- baseline and final browser acceptance semantics, not only their stored `PASSED` status;
+- canonical accessibility delta / visual-parity claims and baseline/final screenshot SHA-256 values;
+- a manifest re-derived field-for-field from `evidence.json`, plus the evidence JSON SHA-256;
+- zero remaining run-owned sandboxes without assuming the account has no concurrent work;
+- leak checks for credentials, signed preview tokens, and local paths.
+
+This means CI can reject altered or incomplete evidence without having a Solari key or model key.
+
+## Evidence bundle
+
+Each live job writes:
 
 ```text
-artifacts/
+artifacts-<job>/
+  baseline.png
+  final.png
   evidence.json
-  preview.png
+  manifest.json
 ```
 
-`evidence.json` is written on both success and failure. A run is only `PASSED`
-after every configured command exits successfully and the cloud browser observes
-`EXPECT_TEXT` in the real preview.
+`evidence.json` is the detailed event/attempt record. `manifest.json` is the compact review surface: source identity, policy, phase results, accepted mutation hash, verification gates, browser delta, cleanup state, and a SHA-256 of `evidence.json`. The offline verifier does not trust the manifest: it re-derives the complete canonical manifest from the detailed evidence and rejects any difference.
 
-The sandbox is destroyed in `finally`; the evidence remains local and can be
-uploaded to CI, a PR comment, object storage, or an assurance dashboard.
+## Method
 
-## Live proof
-
-`sample-output/` contains a sanitized copy of a real Solari run. It
-verified public branch commit `397e31d723cc31df8b4b9549a0fbccd5b9f43824`
-in a fresh sandbox and then asserted `Solari verification passed` from a separate
-Solari cloud browser. Signed capability tokens and raw sandbox capabilities are
-not persisted. The preview origin is evidence only and may expire after the run.
-
-## Live AI mutation proof
-
-`sample-output-ai/artifacts/` is a byte-for-byte copy of a real AI-driven run.
-It checked out public commit `2efa5a792ce34e7ee3ec28656b6dff637c923a40`,
-forwarded an API key only into the sandbox, and ran `qwen/qwen3.8-27b` through
-an OpenAI-compatible endpoint. The model changed exactly
-`fixture-ai/index.html`; the post-agent test passed and a separate Solari browser
-then observed `AI repaired this UI in Solari`.
-
-The evidence persists the changed path and SHA-256 of the git diff, but not the
-raw patch, API key, signed preview token, raw sandbox capability, or host path.
-
-## Real-world issue proof
-
-`artifacts-buddy/` contains the sanitized evidence from a bounded AI repair of
-`Marthijs-Berfelo/buddy-harmony#482` at exact commit
-`9a6fea34db91d535b9d4e255d19c130704da3d61`. A fresh Solari sandbox reproduced
-4 unnamed buttons on `/scale`. The issue text was treated as a hypothesis: the
-Key and Scale selectors already had accessible names and were left untouched.
-
-The agent was restricted to eight source/i18n files. The final gates required
-typecheck, ESLint with zero warnings, all 40 tests, and a production build. A
-separate Solari browser then observed 0 unnamed buttons while preserving all 6
-buttons. Evidence stores the changed-path set, accessibility names, screenshot
-SHA-256 values, and the git-diff SHA-256, but not the raw patch, API keys, signed
-preview capability, raw sandbox capability, or absolute workspace path. Cleanup
-verified 0 active sandboxes.
+The Buddy proof follows a runtime-first blast-radius discipline: the issue is not trusted blindly. The browser baseline showed that `Key` and `Scale` were already named, so the agent was explicitly forbidden from changing that behavior. The acceptance criteria encode the facts the change is safe because of, then prove them on the running app.
