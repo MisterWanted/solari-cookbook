@@ -66,3 +66,15 @@ verified public branch commit `397e31d723cc31df8b4b9549a0fbccd5b9f43824`
 in a fresh sandbox and then asserted `Solari verification passed` from a separate
 Solari cloud browser. Signed capability tokens and raw sandbox capabilities are
 not persisted. The preview origin is evidence only and may expire after the run.
+
+## Live AI mutation proof
+
+`sample-output-ai/artifacts/` is a byte-for-byte copy of a real AI-driven run.
+It checked out public commit `2efa5a792ce34e7ee3ec28656b6dff637c923a40`,
+forwarded an API key only into the sandbox, and ran `qwen/qwen3.8-27b` through
+an OpenAI-compatible endpoint. The model changed exactly
+`fixture-ai/index.html`; the post-agent test passed and a separate Solari browser
+then observed `AI repaired this UI in Solari`.
+
+The evidence persists the changed path and SHA-256 of the git diff, but not the
+raw patch, API key, signed preview token, raw sandbox capability, or host path.

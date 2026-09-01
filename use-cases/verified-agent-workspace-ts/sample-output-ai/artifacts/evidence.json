@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "startedAt": "2026-09-01T09:02:25.022Z",
+  "repository": "https://github.com/MisterWanted/solari-cookbook.git",
+  "ref": "2efa5a792ce34e7ee3ec28656b6dff637c923a40",
+  "commands": [
+    {
+      "command": "cd use-cases/verified-agent-workspace-ts/fixture-ai && npm install --ignore-scripts",
+      "exitCode": 0,
+      "stdout": "\nup to date, audited 1 package in 58ms\n\nfound 0 vulnerabilities\n",
+      "stderr": ""
+    },
+    {
+      "command": "cd use-cases/verified-agent-workspace-ts/fixture-ai && node agent.mjs",
+      "exitCode": 0,
+      "stdout": "AI agent edited fixture-ai/index.html with qwen/qwen3.8-27b\n",
+      "stderr": ""
+    },
+    {
+      "command": "cd use-cases/verified-agent-workspace-ts/fixture-ai && npm test",
+      "exitCode": 0,
+      "stdout": "\n> test\n> node test.mjs\n\nAI mutation fixture test passed\n",
+      "stderr": ""
+    }
+  ],
+  "sandboxFingerprint": "04d3f896b02068b3",
+  "headSha": "2efa5a792ce34e7ee3ec28656b6dff637c923a40",
+  "gitStatus": {
+    "branch": "",
+    "detached": true,
+    "ahead": 0,
+    "behind": 0,
+    "staged": [],
+    "modified": [
+      "use-cases/verified-agent-workspace-ts/fixture-ai/index.html"
+    ],
+    "untracked": [],
+    "clean": false
+  },
+  "mutation": {
+    "changedFiles": [
+      "use-cases/verified-agent-workspace-ts/fixture-ai/index.html"
+    ],
+    "diffSha256": "e95ca81453148ac7fa020130f55dee3c7879c4f4ddc1b61ad09effd4f11faa58"
+  },
+  "previewUrl": "https://04d3f896b02068b3d0ee-3000.preview.getsolari.com/",
+  "browser": {
+    "expectedText": "AI repaired this UI in Solari",
+    "title": "AI Mutation Fixture",
+    "screenshotPath": "artifacts/preview.png",
+    "screenshotSha256": "2f346788679c6d6f4251368d96da5dea65e03b7878b31fbeb415cb3e0add0df0"
+  },
+  "status": "PASSED",
+  "finishedAt": "2026-09-01T09:02:33.385Z"
+}
