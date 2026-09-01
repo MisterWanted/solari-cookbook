@@ -26,6 +26,7 @@ past. Copy one into your project and change the parts you care about.
 | [sandbox-quickstart-ts](examples/sandbox-quickstart-ts) | TypeScript | Run a command, write and read files |
 | [sandbox-code-interpreter-py](examples/sandbox-code-interpreter-py) | Python | Stateful Python kernel for agent loops |
 | [sandbox-port-preview-ts](examples/sandbox-port-preview-ts) | TypeScript | Expose a server in the VM on a public URL |
+| [verified-agent-workspace-ts](examples/verified-agent-workspace-ts) | TypeScript | Build in a sandbox, verify the real preview in a cloud browser, emit evidence |
 
 ### Desktop
 
