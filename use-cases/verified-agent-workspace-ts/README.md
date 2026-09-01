@@ -10,8 +10,8 @@ The flow is intentionally provider-shaped:
 repo/ref -> sandbox -> install -> optional agent -> test -> preview -> browser -> evidence
 ```
 
-Evidence includes the exact git SHA, command exit codes and output, public preview
-URL, browser title, a screenshot, and the screenshot SHA-256 digest.
+Evidence includes the exact git SHA, command exit codes and output, a token-free
+preview origin, browser title, a screenshot, and the screenshot SHA-256 digest.
 
 ## Why this exists
 
@@ -53,3 +53,11 @@ after every configured command exits successfully and the cloud browser observes
 
 The sandbox is destroyed in `finally`; the evidence remains local and can be
 uploaded to CI, a PR comment, object storage, or an assurance dashboard.
+
+## Live proof
+
+`sample-output/artifacts/` is a byte-for-byte copy of a real Solari run. It
+verified public branch commit `07b519f8b678851319c37e23291b7771e9e768bb`
+in a fresh sandbox and then asserted `Solari verification passed` from a separate
+Solari cloud browser. Signed capability tokens and raw sandbox capabilities are
+not persisted. The preview origin is evidence only and may expire after the run.

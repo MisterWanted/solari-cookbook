@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "startedAt": "2026-09-01T08:41:58.230Z",
+  "repository": "https://github.com/MisterWanted/solari-cookbook.git",
+  "ref": "07b519f8b678851319c37e23291b7771e9e768bb",
+  "commands": [
+    {
+      "command": "cd use-cases/verified-agent-workspace-ts/fixture && npm install --ignore-scripts",
+      "exitCode": 0,
+      "stdout": "\nup to date, audited 1 package in 59ms\n\nfound 0 vulnerabilities\n",
+      "stderr": ""
+    },
+    {
+      "command": "cd use-cases/verified-agent-workspace-ts/fixture && npm test",
+      "exitCode": 0,
+      "stdout": "\n> test\n> node test.mjs\n\nfixture test passed\n",
+      "stderr": ""
+    }
+  ],
+  "sandboxFingerprint": "11e5fb8886079b3e",
+  "headSha": "07b519f8b678851319c37e23291b7771e9e768bb",
+  "gitStatus": {
+    "branch": "",
+    "detached": true,
+    "ahead": 0,
+    "behind": 0,
+    "staged": [],
+    "modified": [],
+    "untracked": [],
+    "clean": true
+  },
+  "previewUrl": "https://11e5fb8886079b3e6c56-3000.preview.getsolari.com/",
+  "browser": {
+    "expectedText": "Solari verification passed",
+    "title": "Verified Workspace Fixture",
+    "screenshotPath": "artifacts/preview.png",
+    "screenshotSha256": "9fd38e8d0b454bbdc2dd884f03ffc21f8ce1dbd21050b1fd2e4a1b5fdf2b1fec"
+  },
+  "status": "PASSED",
+  "finishedAt": "2026-09-01T08:42:05.807Z"
+}
