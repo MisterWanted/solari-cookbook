@@ -78,3 +78,19 @@ then observed `AI repaired this UI in Solari`.
 
 The evidence persists the changed path and SHA-256 of the git diff, but not the
 raw patch, API key, signed preview token, raw sandbox capability, or host path.
+
+## Real-world issue proof
+
+`artifacts-buddy/` contains the sanitized evidence from a bounded AI repair of
+`Marthijs-Berfelo/buddy-harmony#482` at exact commit
+`9a6fea34db91d535b9d4e255d19c130704da3d61`. A fresh Solari sandbox reproduced
+4 unnamed buttons on `/scale`. The issue text was treated as a hypothesis: the
+Key and Scale selectors already had accessible names and were left untouched.
+
+The agent was restricted to eight source/i18n files. The final gates required
+typecheck, ESLint with zero warnings, all 40 tests, and a production build. A
+separate Solari browser then observed 0 unnamed buttons while preserving all 6
+buttons. Evidence stores the changed-path set, accessibility names, screenshot
+SHA-256 values, and the git-diff SHA-256, but not the raw patch, API keys, signed
+preview capability, raw sandbox capability, or absolute workspace path. Cleanup
+verified 0 active sandboxes.

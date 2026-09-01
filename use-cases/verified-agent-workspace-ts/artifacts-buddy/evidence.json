@@ -1,0 +1,105 @@
+{
+  "version": 1,
+  "startedAt": "2026-09-01T13:28:35.813Z",
+  "repository": "https://github.com/Marthijs-Berfelo/buddy-harmony.git",
+  "ref": "9a6fea34db91d535b9d4e255d19c130704da3d61",
+  "issue": 482,
+  "agent": {
+    "model": "glm-5.3",
+    "provider": "z.ai coding",
+    "result": "{\"model\":\"glm-5.3\",\"changedFiles\":[\"public/locales/en/common.json\",\"public/locales/en/settings.json\",\"public/locales/nl/common.json\",\"public/locales/nl/settings.json\",\"src/common/layout/Header.tsx\",\"src/common/layout/components/LanguageSelector.tsx\",\"src/common/toolbar/Toolbar.tsx\",\"src/common/toolbar/components/SettingsTools.tsx\"],\"editCount\":8}"
+  },
+  "allowlist": [
+    "src/common/layout/Header.tsx",
+    "src/common/layout/components/LanguageSelector.tsx",
+    "src/common/toolbar/components/SettingsTools.tsx",
+    "src/common/toolbar/Toolbar.tsx",
+    "public/locales/en/common.json",
+    "public/locales/nl/common.json",
+    "public/locales/en/settings.json",
+    "public/locales/nl/settings.json"
+  ],
+  "checks": [
+    {
+      "command": "curl -fsSL https://nodejs.org/dist/v24.15.0/node-v24.15.0-linux-x64.tar.xz -o /tmp/node.tar.xz && rm -rf /opt/node && mkdir -p /opt/node && tar -xJf /tmp/node.tar.xz -C /opt/node --strip-components=1 && /opt/node/bin/node --version && PATH=/opt/node/bin:$PATH /opt/node/bin/npm --version",
+      "exitCode": 0,
+      "stdout": "v24.15.0\n11.12.1\n",
+      "stderr": ""
+    },
+    {
+      "command": "export PATH=/opt/node/bin:$PATH; npm install && git restore -- package-lock.json",
+      "exitCode": 0,
+      "stdout": "\nadded 1115 packages, and audited 1116 packages in 12s\n\n307 packages are looking for funding\n  run `npm fund` for details\n\n2 vulnerabilities (1 moderate, 1 high)\n\nTo address all issues (including breaking changes), run:\n  npm audit fix --force\n\nRun `npm audit` for details.\n",
+      "stderr": "npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.\nnpm warn deprecated glob@7.2.3: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me\nnpm notice\nnpm notice New major version of npm available! 11.12.1 -> 12.0.2\nnpm notice Changelog: https://github.com/npm/cli/releases/tag/v12.0.2\nnpm notice To update run: npm install -g npm@12.0.2\nnpm notice\n"
+    },
+    {
+      "command": "export PATH=/opt/node/bin:$PATH; npm run typecheck",
+      "exitCode": 0,
+      "stdout": "\n> buddy-harmony@0.11.17 typecheck\n> tsc --noEmit\n\n",
+      "stderr": ""
+    },
+    {
+      "command": "export PATH=/opt/node/bin:$PATH; npm run lint -- --max-warnings=0",
+      "exitCode": 0,
+      "stdout": "\n> buddy-harmony@0.11.17 lint\n> eslint src --max-warnings=0\n\n",
+      "stderr": ""
+    },
+    {
+      "command": "export PATH=/opt/node/bin:$PATH; npm test -- --reporter=dot",
+      "exitCode": 0,
+      "stdout": "\n> buddy-harmony@0.11.17 test\n> vitest run --coverage --reporter=dot\n\n\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv4.1.11 \u001b[39m\u001b[90m[workspace]\u001b[39m\n      \u001b[2mCoverage enabled with \u001b[22m\u001b[33mv8\u001b[39m\n\n\u001b[33m\u001b[39m\u001b[32m·\u001b[39m\u001b[33m\u001b[39m\u001b[32m·\u001b[39m\u001b[33m\u001b[39m\u001b[32m·\u001b[39m\u001b[33m\u001b[39m\u001b[32m·\u001b[39m\u001b[33m\u001b[39m\u001b[32m·\u001b[39m\u001b[33m\u001b[39m\u001b[32m·\u001b[39m\u001b[33m\u001b[39m\u001b[32m·\u001b[39m\u001b[33m\u001b[39m\u001b[32m·\u001b[39m\u001b[33m\u001b[39m\u001b[32m·\u001b[39m\u001b[33m\u001b[39m\u001b[32m·\u001b[39m\u001b[33m\u001b[39m\u001b[32m·\u001b[39m\u001b[33m\u001b[39m\u001b[32m·\u001b[39m\u001b[33m\u001b[39m\u001b[32m·\u001b[39m\u001b[33m\u001b[39m\u001b[32m·\u001b[39m\u001b[33m\u001b[39m\u001b[32m·\u001b[39m\u001b[33m\u001b[39m\u001b[32m·\u001b[39m\u001b[33m\u001b[39m\u001b[32m·\u001b[39m\u001b[33m\u001b[39m\u001b[32m·\u001b[39m\u001b[33m\u001b[39m\u001b[32m·\u001b[39m\u001b[33m\u001b[39m\u001b[32m·\u001b[39m\u001b[33m\u001b[39m\u001b[32m·\u001b[39m\u001b[33m\u001b[39m\u001b[32m·\u001b[39m\u001b[33m\u001b[39m\u001b[32m·\u001b[39m\u001b[33m\u001b[39m\u001b[32m·\u001b[39m\u001b[33m\u001b[39m\u001b[32m·\u001b[39m\u001b[33m\u001b[39m\u001b[32m·\u001b[39m\u001b[33m\u001b[39m\u001b[32m·\u001b[39m\u001b[33m\u001b[39m\u001b[32m·\u001b[39m\u001b[33m\u001b[39m\u001b[32m·\u001b[39m\u001b[33m\u001b[39m\u001b[32m·\u001b[39m\u001b[33m\u001b[39m\u001b[32m·\u001b[39m\u001b[33m\u001b[39m\u001b[32m·\u001b[39m\u001b[33m\u001b[39m\u001b[32m·\u001b[39m\u001b[33m\u001b[39m\u001b[32m·\u001b[39m\u001b[33m\u001b[39m\u001b[32m·\u001b[39m\u001b[33m\u001b[39m\u001b[32m·\u001b[39m\u001b[33m\u001b[39m\u001b[32m·\u001b[39m\u001b[33m\u001b[39m\u001b[32m·\u001b[39m\u001b[33m\u001b[39m\u001b[32m·\u001b[39m\u001b[33m\u001b[39m\u001b[32m·\u001b[39m\n\n\u001b[2m Test Files \u001b[22m \u001b[1m\u001b[32m3 passed\u001b[39m\u001b[22m\u001b[90m (3)\u001b[39m\n\u001b[2m      Tests \u001b[22m \u001b[1m\u001b[32m40 passed\u001b[39m\u001b[22m\u001b[90m (40)\u001b[39m\n\u001b[2m   Start at \u001b[22m 13:32:05\n\u001b[2m   Duration \u001b[22m 3.77s\u001b[2m (transform 304ms, setup 267ms, import 562ms, tests 99ms, environment 1.76s)\u001b[22m\n\n\u001b[34m % \u001b[39m\u001b[2mCoverage report from \u001b[22m\u001b[33mv8\u001b[39m\n-------------------|---------|----------|---------|---------|-------------------\nFile               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s \n-------------------|---------|----------|---------|---------|-------------------\nAll files          |   19.66 |    10.12 |   10.08 |   19.83 |                   \n src               |       0 |        0 |       0 |       0 |                   \n  App.css          |       0 |        0 |       0 |       0 |                   \n  App.tsx          |       0 |      100 |       0 |       0 | 6                 \n  index.css        |       0 |        0 |       0 |       0 |                   \n  index.tsx        |       0 |      100 |     100 |       0 | 8-20              \n  logo.svg         |       0 |        0 |       0 |       0 |                   \n  ...tWebVitals.ts |       0 |        0 |       0 |       0 | 5-11              \n  translations.tsx |       0 |      100 |       0 |       0 | 8-25              \n  vite-env.d.ts    |       0 |        0 |       0 |       0 |                   \n src/common        |       0 |      100 |     100 |       0 |                   \n  Page.css         |       0 |        0 |       0 |       0 |                   \n  app-info.ts      |       0 |      100 |     100 |       0 | 3                 \n  index.ts         |       0 |        0 |       0 |       0 |                   \n ...mmon/fretboard |     100 |      100 |     100 |     100 |                   \n  index.ts         |       0 |        0 |       0 |       0 |                   \n  options.ts       |     100 |      100 |     100 |     100 |                   \n ...ard/components |    6.08 |        0 |       0 |    6.22 |                   \n  ChordShape.tsx   |    2.98 |        0 |       0 |    2.98 | 14-16,31-261      \n  DebugGrid.tsx    |      50 |      100 |       0 |      50 | 4                 \n  Diagram.tsx      |    4.54 |        0 |       0 |    4.76 | 36-40,83-162      \n  FretNumbers.tsx  |   10.34 |        0 |       0 |   10.34 | 25-27,37-109      \n  Fretboard.tsx    |    6.45 |        0 |       0 |    7.14 | 14-15,37-139      \n  ScaleShape.tsx   |    5.88 |        0 |       0 |    5.88 | 13-15,25-108      \n  Tuning.tsx       |    8.69 |        0 |       0 |    8.69 | 7-9,19-72         \n ...retboard/utils |   13.95 |    23.72 |    5.26 |   13.95 |                   \n  diagram-style.ts |   16.66 |    35.89 |    12.5 |   16.66 | ...07-110,118-154 \n  directional.ts   |       0 |        0 |       0 |       0 | 18-33             \n  index.ts         |       0 |        0 |       0 |       0 |                   \n  scale.ts         |       0 |        0 |       0 |       0 |                   \n  shape.ts         |    5.26 |        0 |       0 |    5.26 | 15-59             \n  svg.ts           |      50 |      100 |       0 |      50 | 2,5               \n src/common/layout |       0 |        0 |       0 |       0 |                   \n  Content.tsx      |       0 |      100 |       0 |       0 | 6-10              \n  Footer.tsx       |       0 |        0 |       0 |       0 | 11-76             \n  Header.tsx       |       0 |        0 |       0 |       0 | 16-41             \n  Layout.tsx       |       0 |      100 |       0 |       0 | 7-8               \n  index.ts         |       0 |        0 |       0 |       0 |                   \n ...out/components |   88.37 |       50 |   83.33 |   88.37 |                   \n  ...eSelector.tsx |   88.37 |       50 |   83.33 |   88.37 | 53-57,101         \n ...common/routing |       0 |      100 |       0 |       0 |                   \n  pages.ts         |       0 |      100 |       0 |       0 | 1-6               \n  router.tsx       |       0 |      100 |     100 |       0 | 7                 \n ...common/toolbar |       0 |      100 |       0 |       0 |                   \n  Toolbar.tsx      |       0 |      100 |       0 |       0 | 18-37             \n ...bar/components |       0 |        0 |       0 |       0 |                   \n  ...dSelector.tsx |       0 |        0 |       0 |       0 | 18-40             \n  KeySelector.tsx  |       0 |        0 |       0 |       0 | 17-39             \n  ...eSelector.tsx |       0 |        0 |       0 |       0 | 18-45             \n  ...ingsTools.tsx |       0 |        0 |       0 |       0 | 32-126            \n src/common/utils  |       0 |        0 |       0 |       0 |                   \n  enum-helper.ts   |       0 |        0 |       0 |       0 | 2-4               \n  index.ts         |       0 |        0 |       0 |       0 |                   \n src/components/ui |       0 |        0 |       0 |       0 |                   \n  button.tsx       |       0 |        0 |       0 |       0 | 7-56              \n  ...down-menu.tsx |       0 |        0 |       0 |       0 | 8-220             \n  select.tsx       |       0 |        0 |       0 |       0 | 8-158             \n  tooltip.tsx      |       0 |        0 |       0 |       0 | 1-35              \n src/hooks         |   57.37 |    31.25 |      30 |   61.53 |                   \n  base-context.ts  |       0 |        0 |       0 |       0 |                   \n  chord-db.ts      |   45.45 |    21.42 |   18.18 |      50 | ...-94,99,102,105 \n  constants.ts     |      76 |      100 |      50 |   80.95 | 34,76-78          \n  index.ts         |       0 |        0 |       0 |       0 |                   \n  use-keys.ts      |   33.33 |      100 |       0 |   33.33 | 11-13             \n ...hooks/settings |   12.82 |        0 |       0 |   13.15 |                   \n  ...tProvider.tsx |   12.82 |        0 |       0 |   13.15 | 50-54,63-131      \n  index.ts         |       0 |        0 |       0 |       0 |                   \n src/lib           |       0 |      100 |       0 |       0 |                   \n  utils.ts         |       0 |      100 |       0 |       0 | 5                 \n src/modules/caged |       0 |      100 |       0 |       0 |                   \n  CagedPage.tsx    |       0 |      100 |       0 |       0 | 8-12              \n  index.ts         |       0 |        0 |       0 |       0 |                   \n ...ged/components |       0 |        0 |       0 |       0 |                   \n  CagedContent.tsx |       0 |        0 |       0 |       0 | 7-15              \n  CagedToolBar.tsx |       0 |      100 |       0 |       0 | 8-19              \n ...es/caged/hooks |   29.33 |    46.15 |   14.28 |   29.72 |                   \n  ...-constants.ts |       0 |      100 |     100 |       0 | 37-110            \n  caged-utils.ts   |   43.13 |    66.66 |      20 |   43.13 | ...,91-96,121-122 \n  index.ts         |       0 |        0 |       0 |       0 |                   \n  use-caged.ts     |       0 |        0 |       0 |       0 | 22-64             \n src/modules/chord |       0 |      100 |       0 |       0 |                   \n  ChordPage.tsx    |       0 |      100 |       0 |       0 | 8-12              \n  index.ts         |       0 |        0 |       0 |       0 |                   \n ...ord/components |       0 |        0 |       0 |       0 |                   \n  ChordContent.tsx |       0 |        0 |       0 |       0 | 7-45              \n  ChordToolBar.tsx |       0 |      100 |       0 |       0 | 8-19              \n ...es/chord/hooks |       0 |        0 |       0 |       0 |                   \n  index.ts         |       0 |        0 |       0 |       0 |                   \n  ...itar-chord.ts |       0 |        0 |       0 |       0 | 19-49             \n src/modules/scale |       0 |      100 |       0 |       0 |                   \n  ScalePage.tsx    |       0 |      100 |       0 |       0 | 7-10              \n  index.ts         |       0 |        0 |       0 |       0 |                   \n ...ale/components |       0 |        0 |       0 |       0 |                   \n  ScaleContent.tsx |       0 |        0 |       0 |       0 | 7-16              \n  ScaleToolBar.tsx |       0 |      100 |       0 |       0 | 8-20              \n ...es/scale/hooks |       0 |        0 |       0 |       0 |                   \n  index.ts         |       0 |        0 |       0 |       0 |                   \n  ...itar-scale.ts |       0 |        0 |       0 |       0 | 13-38             \n-------------------|---------|----------|---------|---------|-------------------\n",
+      "stderr": "(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:\n  - `__dirname` (vite.config.ts:11:25). Use `import.meta.dirname` instead\nSet `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.\n\u001b[90mstderr\u001b[2m | src/common/layout/components/__tests__/LanguageSelector.spec.tsx\u001b[2m > \u001b[22m\u001b[2mLanguageSelector\u001b[2m > \u001b[22m\u001b[2mrenders immediately when i18n has already resolved a language before mount\n\u001b[22m\u001b[39mreact-i18next:: i18n.languages were undefined or empty { code: \u001b[32m'NO_LANGUAGES'\u001b[39m, languages: \u001b[90mundefined\u001b[39m }\n\n\u001b[90mstderr\u001b[2m | src/common/layout/components/__tests__/LanguageSelector.spec.tsx\u001b[2m > \u001b[22m\u001b[2mLanguageSelector\u001b[2m > \u001b[22m\u001b[2mpicks up the resolved language via languageChanged event when resolution happens after mount\n\u001b[22m\u001b[39mreact-i18next:: useTranslation: t was called before ready. When using useSuspense: false, make sure to check the ready flag before using t. { code: \u001b[32m'USE_T_BEFORE_READY'\u001b[39m }\n\n"
+    },
+    {
+      "command": "export PATH=/opt/node/bin:$PATH; npm run build",
+      "exitCode": 0,
+      "stdout": "\n> buddy-harmony@0.11.17 build\n> tsc && vite build\n\nvite v8.2.2 building client environment for production...\ntransforming...\n✓ 2081 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                                                2.16 kB │ gzip:   1.01 kB\ndist/assets/geist-cyrillic-ext-wght-normal-DjL33-gN.woff2      7.42 kB\ndist/assets/geist-vietnamese-wght-normal-6IgcOCM7.woff2        8.00 kB\ndist/assets/geist-cyrillic-wght-normal-BEAKL7Jp.woff2         15.08 kB\ndist/assets/geist-latin-ext-wght-normal-DC-KSUi6.woff2        16.51 kB\ndist/assets/geist-latin-wght-normal-BgDaEnEv.woff2            29.40 kB\ndist/assets/index-C1EC7K7y.css                                48.06 kB │ gzip:   9.45 kB\ndist/assets/chord-BedapOwk.js                                  1.88 kB │ gzip:   0.88 kB │ map:     6.81 kB\ndist/assets/caged-DSqDQ4L7.js                                 46.48 kB │ gzip:   9.15 kB │ map:   193.00 kB\ndist/assets/index-BtPkfWl2.js                              2,016.31 kB │ gzip: 517.74 kB │ map: 5,635.12 kB\n\n✓ built in 1.84s\n",
+      "stderr": "(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:\n  - `__dirname` (vite.config.ts:11:25). Use `import.meta.dirname` instead\nSet `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.\n[plugin @tailwindcss/vite:generate:build] \u001b[33m[SOURCEMAP_BROKEN] \u001b[0mSourcemap is likely to be incorrect: a plugin (@tailwindcss/vite:generate:build) was used to transform files, but didn't generate a sourcemap for the transformation. Consult the plugin documentation for help: https://rolldown.rs/guide/troubleshooting#warning-sourcemap-is-likely-to-be-incorrect\n\n[plugin builtin:vite-reporter] \n(!) Some chunks are larger than 500 kB after minification. Consider:\n- Using dynamic import() to code-split the application\n- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting\n- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.\n"
+    }
+  ],
+  "sandboxFingerprint": "c33637661f88c308",
+  "headSha": "9a6fea34db91d535b9d4e255d19c130704da3d61",
+  "baseline": {
+    "buttonCount": 6,
+    "unnamedButtonCount": 4,
+    "buttonNames": [
+      "",
+      "",
+      "",
+      "",
+      "Key",
+      "Scale"
+    ],
+    "screenshot": "baseline.png",
+    "screenshotSha256": "33cc87c9c9673735e0ce734e1b0ec0a79f16f264555b9329f885bb23e1adc648"
+  },
+  "changedFiles": [
+    "public/locales/en/common.json",
+    "public/locales/en/settings.json",
+    "public/locales/nl/common.json",
+    "public/locales/nl/settings.json",
+    "src/common/layout/Header.tsx",
+    "src/common/layout/components/LanguageSelector.tsx",
+    "src/common/toolbar/Toolbar.tsx",
+    "src/common/toolbar/components/SettingsTools.tsx"
+  ],
+  "diffSha256": "be1361d834c4ae36b19d25af17c0cb42d3fe17350b4ed343540b95f9072f0558",
+  "previewUrl": "https://c33637661f88c3087213-4173.preview.getsolari.com/",
+  "final": {
+    "buttonCount": 6,
+    "unnamedButtonCount": 0,
+    "buttonNames": [
+      "Menu",
+      "Settings",
+      "Print scale",
+      "Select language",
+      "Key",
+      "Scale"
+    ],
+    "screenshot": "final.png",
+    "screenshotSha256": "33cc87c9c9673735e0ce734e1b0ec0a79f16f264555b9329f885bb23e1adc648"
+  },
+  "status": "PASSED",
+  "finishedAt": "2026-09-01T13:32:21.109Z",
+  "activeSandboxesAfterCleanup": 0
+}
