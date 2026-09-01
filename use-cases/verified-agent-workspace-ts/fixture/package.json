@@ -1,0 +1,9 @@
+{
+  "name": "solari-verified-workspace-fixture",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node test.mjs",
+    "start": "node server.mjs"
+  }
+}
