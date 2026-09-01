@@ -13,6 +13,16 @@ repo/ref -> sandbox -> install -> optional agent -> test -> preview -> browser -
 Evidence includes the exact git SHA, command exit codes and output, public preview
 URL, browser title, a screenshot, and the screenshot SHA-256 digest.
 
+## Why this exists
+
+A green build is not proof that an agent changed the product correctly. Dev servers
+can boot while the UI is blank, stale, or functionally wrong. This workflow uses
+separate Solari compute and browser sessions so the final assertion observes the
+real public preview rather than trusting the process that produced it.
+
+The optional `AGENT_CMD` keeps the executor replaceable: the same verification
+path can wrap Pi, Codex, OpenCode, or another coding agent.
+
 ## Run
 
 ```bash
