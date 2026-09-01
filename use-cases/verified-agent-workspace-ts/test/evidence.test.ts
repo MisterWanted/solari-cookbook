@@ -18,8 +18,22 @@ test("hashes and writes durable evidence", async () => {
   const evidence: VerificationEvidence = {
     version: 1,
     startedAt: "2026-09-01T00:00:00.000Z",
+    finishedAt: "2026-09-01T00:00:01.000Z",
+    sandboxFingerprint: "0123456789abcdef",
     repository: "https://github.com/example/repo",
+    headSha: "0123456789abcdef0123456789abcdef01234567",
+    gitStatus: {
+      branch: "main", detached: false, ahead: 0, behind: 0,
+      staged: [], modified: [], untracked: [], clean: true,
+    },
+    previewUrl: "https://example.preview.getsolari.com/",
     commands: [],
+    browser: {
+      expectedText: "proof",
+      title: "Proof",
+      screenshotPath: "artifacts/preview.png",
+      screenshotSha256: "a".repeat(64),
+    },
     status: "PASSED",
   }
   const out = join(dir, "evidence.json")

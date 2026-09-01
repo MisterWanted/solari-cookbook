@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto"
 import { mkdir, readFile, writeFile } from "node:fs/promises"
 import { dirname } from "node:path"
-import type { VerificationEvidence } from "./types.js"
+import type { EvidenceProgress, FailedEvidence, VerificationEvidence } from "./types.js"
 
 const MAX_LOG_CHARS = 16_000
 
@@ -41,9 +41,9 @@ export async function writeEvidence(
 }
 
 export function failEvidence(
-  evidence: VerificationEvidence,
+  evidence: EvidenceProgress,
   error: unknown,
-): VerificationEvidence {
+): FailedEvidence {
   return {
     ...evidence,
     finishedAt: new Date().toISOString(),

@@ -2,7 +2,7 @@ import { loadConfig } from "./src/config.js"
 import { capabilityFingerprint, failEvidence, publicPreviewUrl, writeEvidence } from "./src/evidence.js"
 import { verifyPreview } from "./src/solari-browser.js"
 import { SolariWorkspaceProvider } from "./src/solari-workspace.js"
-import type { VerificationEvidence } from "./src/types.js"
+import type { EvidenceProgress, PassedEvidence } from "./src/types.js"
 import { waitForHttp } from "./src/wait.js"
 
 const apiKey = process.env.SOLARI_API_KEY
@@ -13,58 +13,62 @@ const evidencePath = "artifacts/evidence.json"
 const screenshotPath = "artifacts/preview.png"
 const workspace = new SolariWorkspaceProvider(apiKey)
 
-let evidence: VerificationEvidence = {
+const progress: EvidenceProgress = {
   version: 1,
   startedAt: new Date().toISOString(),
   repository: config.repoUrl,
   ref: config.ref,
   commands: [],
-  status: "RUNNING",
 }
 
 try {
-  const sandboxCapability = await workspace.create()
-  evidence.sandboxFingerprint = capabilityFingerprint(sandboxCapability)
+  const sandboxFingerprint = capabilityFingerprint(await workspace.create())
+  progress.sandboxFingerprint = sandboxFingerprint
   await workspace.clone(config.repoUrl, config.ref)
-  evidence.headSha = await workspace.headSha()
+
+  const headSha = await workspace.headSha()
+  progress.headSha = headSha
 
   const commands = [config.installCommand, config.agentCommand, config.testCommand].filter(
     (command): command is string => Boolean(command),
   )
   for (const command of commands) {
     const result = await workspace.exec(command)
-    evidence.commands.push(result)
-    if (result.exitCode !== 0) {
-      throw new Error(`Command failed (${result.exitCode}): ${command}`)
-    }
+    progress.commands.push(result)
+    if (result.exitCode !== 0) throw new Error(`Command failed (${result.exitCode}): ${command}`)
   }
-  evidence.gitStatus = await workspace.gitStatus()
 
+  const gitStatus = await workspace.gitStatus()
+  progress.gitStatus = gitStatus
   await workspace.start(config.startCommand)
+
   const previewCapabilityUrl = await workspace.previewUrl(config.port)
-  evidence.previewUrl = publicPreviewUrl(previewCapabilityUrl)
+  const previewUrl = publicPreviewUrl(previewCapabilityUrl)
+  progress.previewUrl = previewUrl
   await waitForHttp(previewCapabilityUrl)
-  evidence.browser = await verifyPreview(
-    apiKey,
-    previewCapabilityUrl,
-    config.expectedText,
-    screenshotPath,
-  )
-  evidence = {
-    ...evidence,
-    finishedAt: new Date().toISOString(),
+
+  const browser = await verifyPreview(apiKey, previewCapabilityUrl, config.expectedText, screenshotPath)
+  progress.browser = browser
+
+  const evidence: PassedEvidence = {
+    ...progress,
     status: "PASSED",
+    finishedAt: new Date().toISOString(),
+    sandboxFingerprint,
+    headSha,
+    gitStatus,
+    previewUrl,
+    browser,
   }
   await writeEvidence(evidencePath, evidence)
   console.log(JSON.stringify({
     status: evidence.status,
     headSha: evidence.headSha,
     previewUrl: evidence.previewUrl,
-    screenshotSha256: evidence.browser?.screenshotSha256,
+    screenshotSha256: evidence.browser.screenshotSha256,
   }, null, 2))
 } catch (error) {
-  evidence = failEvidence(evidence, error)
-  await writeEvidence(evidencePath, evidence)
+  await writeEvidence(evidencePath, failEvidence(progress, error))
   throw error
 } finally {
   await workspace.destroy()

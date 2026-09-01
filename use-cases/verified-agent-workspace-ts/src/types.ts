@@ -16,32 +16,52 @@ export interface CommandEvidence {
   stderr: string
 }
 
-export interface VerificationEvidence {
+export interface GitStatusEvidence {
+  branch: string
+  detached: boolean
+  ahead: number
+  behind: number
+  staged: string[]
+  modified: string[]
+  untracked: string[]
+  clean: boolean
+}
+
+export interface BrowserEvidence {
+  expectedText: string
+  title: string
+  screenshotPath: string
+  screenshotSha256: string
+}
+
+export interface EvidenceProgress {
   version: 1
   startedAt: string
-  finishedAt?: string
   sandboxFingerprint?: string
   repository: string
   ref?: string
   headSha?: string
-  gitStatus?: {
-    branch: string
-    detached: boolean
-    ahead: number
-    behind: number
-    staged: string[]
-    modified: string[]
-    untracked: string[]
-    clean: boolean
-  }
+  gitStatus?: GitStatusEvidence
   previewUrl?: string
   commands: CommandEvidence[]
-  browser?: {
-    expectedText: string
-    title: string
-    screenshotPath: string
-    screenshotSha256: string
-  }
-  status: "RUNNING" | "PASSED" | "FAILED"
-  error?: string
+  browser?: BrowserEvidence
 }
+
+export interface PassedEvidence
+  extends Omit<EvidenceProgress, "sandboxFingerprint" | "headSha" | "gitStatus" | "previewUrl" | "browser"> {
+  status: "PASSED"
+  finishedAt: string
+  sandboxFingerprint: string
+  headSha: string
+  gitStatus: GitStatusEvidence
+  previewUrl: string
+  browser: BrowserEvidence
+}
+
+export interface FailedEvidence extends EvidenceProgress {
+  status: "FAILED"
+  finishedAt: string
+  error: string
+}
+
+export type VerificationEvidence = PassedEvidence | FailedEvidence
