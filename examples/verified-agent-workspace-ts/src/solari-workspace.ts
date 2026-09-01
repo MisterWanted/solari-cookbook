@@ -1,5 +1,6 @@
 import { SolariClient } from "@solarisdk/sdk"
 import type { CommandEvidence } from "./types.js"
+import { scrubOutput } from "./evidence.js"
 
 type SandboxHandle = Awaited<ReturnType<SolariClient["sandboxes"]["create"]>>
 
@@ -17,6 +18,8 @@ export class SolariWorkspaceProvider {
       timeoutMs: 10 * 60_000,
     })
     await this.sandbox.connect()
+    const mkdir = await this.sandbox.commands.run("mkdir", { args: ["-p", "/workspace"] })
+    if (mkdir.exitCode !== 0) throw new Error(`Failed to prepare workspace: ${mkdir.stderr}`)
     return this.sandbox.sandboxId
   }
 
@@ -31,12 +34,13 @@ export class SolariWorkspaceProvider {
     const result = await sandbox.commands.run("sh", {
       args: ["-lc", command],
       cwd: "/workspace/repo",
+      timeoutMs: 8 * 60_000,
     })
     return {
       command,
       exitCode: result.exitCode,
-      stdout: result.stdout,
-      stderr: result.stderr,
+      stdout: scrubOutput(result.stdout),
+      stderr: scrubOutput(result.stderr),
     }
   }
 
