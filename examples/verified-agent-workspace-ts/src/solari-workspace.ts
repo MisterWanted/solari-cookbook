@@ -51,6 +51,10 @@ export class SolariWorkspaceProvider {
     })
   }
 
+  async gitStatus() {
+    return this.requireSandbox().git.status("/workspace/repo")
+  }
+
   async headSha(): Promise<string> {
     const [commit] = await this.requireSandbox().git.log({
       cwd: "/workspace/repo",

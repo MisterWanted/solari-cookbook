@@ -24,6 +24,16 @@ export interface VerificationEvidence {
   repository: string
   ref?: string
   headSha?: string
+  gitStatus?: {
+    branch: string
+    detached: boolean
+    ahead: number
+    behind: number
+    staged: string[]
+    modified: string[]
+    untracked: string[]
+    clean: boolean
+  }
   previewUrl?: string
   commands: CommandEvidence[]
   browser?: {

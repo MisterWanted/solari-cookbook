@@ -38,6 +38,7 @@ try {
       throw new Error(`Command failed (${result.exitCode}): ${command}`)
     }
   }
+  evidence.gitStatus = await workspace.gitStatus()
 
   await workspace.start(config.startCommand)
   evidence.previewUrl = await workspace.previewUrl(config.port)
