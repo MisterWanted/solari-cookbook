@@ -57,7 +57,7 @@ uploaded to CI, a PR comment, object storage, or an assurance dashboard.
 ## Live proof
 
 `sample-output/artifacts/` is a byte-for-byte copy of a real Solari run. It
-verified public branch commit `07b519f8b678851319c37e23291b7771e9e768bb`
+verified public branch commit `397e31d723cc31df8b4b9549a0fbccd5b9f43824`
 in a fresh sandbox and then asserted `Solari verification passed` from a separate
 Solari cloud browser. Signed capability tokens and raw sandbox capabilities are
 not persisted. The preview origin is evidence only and may expire after the run.
