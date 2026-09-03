@@ -3,10 +3,15 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "tsx index.ts",
     "typecheck": "tsc --noEmit",
     "test": "tsx --test test/*.test.ts",
-    "check": "npm run typecheck && npm test"
+    "check": "npm run typecheck && npm test && npm run verify:evidence",
+    "job": "tsx run-job.ts",
+    "demo:buddy": "npm run job -- jobs/buddy-harmony.json",
+    "demo:fixture": "npm run job -- jobs/fixture-ai.json",
+    "verify:buddy": "tsx verify-evidence.ts jobs/buddy-harmony.json artifacts-buddy",
+    "verify:fixture": "tsx verify-evidence.ts jobs/fixture-ai.json artifacts-fixture-ai",
+    "verify:evidence": "npm run verify:buddy && npm run verify:fixture"
   },
   "dependencies": {
     "@solarisdk/browser": "0.1.2",
